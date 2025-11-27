@@ -153,7 +153,7 @@ export default function MapView() {
             />
 
             {/* Chat Panel */}
-            <ChatPanel />
+            <ChatPanel context={selectedCell} />
         </div>
     );
 }

@@ -2,25 +2,41 @@
 
 import React, { useState } from 'react';
 
-export default function ChatPanel() {
+export default function ChatPanel({ context }: { context?: any }) {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([
         { role: 'ai', text: 'Hello! I am GeoLens AI. Ask me about environmental risks in the current view.' }
     ]);
     const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!input.trim()) return;
-        setMessages(prev => [...prev, { role: 'user', text: input }]);
-        setInput('');
 
-        // Mock response
-        setTimeout(() => {
-            setMessages(prev => [...prev, {
-                role: 'ai',
-                text: "I'm analyzing the visible region. Based on the H3 index data, this area shows high seismic activity but stable slopes. Would you like to see a detailed report?"
-            }]);
-        }, 1000);
+        const userMessage = input;
+        setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+        setInput('');
+        setLoading(true);
+
+        try {
+            const res = await fetch('http://localhost:3001/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userMessage,
+                    history: messages.map(m => ({ role: m.role === 'ai' ? 'model' : 'user', parts: m.text })),
+                    context: context ? JSON.stringify(context) : "No specific cell selected. User is viewing the map of Italy."
+                })
+            });
+
+            const data = await res.json();
+            setMessages(prev => [...prev, { role: 'ai', text: data.response }]);
+        } catch (e) {
+            console.error(e);
+            setMessages(prev => [...prev, { role: 'ai', text: "Sorry, I couldn't connect to the AI server." }]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isOpen) {
@@ -45,8 +61,8 @@ export default function ChatPanel() {
                 {messages.map((m, i) => (
                     <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[80%] p-2 rounded-lg text-sm ${m.role === 'user'
-                                ? 'bg-blue-600 text-white rounded-br-none'
-                                : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm'
+                            ? 'bg-blue-600 text-white rounded-br-none'
+                            : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm'
                             }`}>
                             {m.text}
                         </div>

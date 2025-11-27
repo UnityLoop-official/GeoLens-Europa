@@ -2,7 +2,12 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
+import * as dotenv from 'dotenv';
 import { CellScore } from '@geo-lens/geocube';
+import { analyzeRiskWithContext } from '@geo-lens/gemini-client';
+
+// Load environment variables
+dotenv.config();
 
 const server = Fastify({ logger: true });
 
@@ -75,12 +80,48 @@ server.get<{ Params: { h3Index: string } }>('/cell/:h3Index', async (request, re
 
 server.post<{ Body: { h3Index: string; context: any } }>('/ai/analyze', async (request, reply) => {
     const { h3Index, context } = request.body;
+    const apiKey = process.env.GEMINI_API_KEY || '';
 
-    // Mock AI Analysis
+    if (!apiKey) {
+        request.log.warn('GEMINI_API_KEY not found in environment variables.');
+    }
+
+    // Map frontend context to RiskContext
+    const riskContext = {
+        slopeMean: context.slope || 0,
+        landslideHistory: context.landslideHistory || 'UNKNOWN'
+    };
+
+    // Call Real Gemini Client
+    const result = await analyzeRiskWithContext(h3Index, 'mock-image-buffer', riskContext, apiKey);
+
     return {
-        risk_confirmation: true,
-        confidence: 0.89,
-        key_visual_clues: ["Scarring on northern slope", "Disrupted vegetation patterns"],
-        reasoning: `Visual analysis of H3 cell ${h3Index} confirms high landslide susceptibility. The satellite imagery shows clear signs of recent soil displacement consistent with the reported slope of ${context?.slope || 'unknown'} degrees.`
+        risk_confirmation: result.visualConfirmation,
+        confidence: result.confidence,
+        key_visual_clues: ["Analysis based on provided context"], // Placeholder as real image analysis isn't fully wired
+        reasoning: result.reasoning
     };
 });
+
+server.post<{ Body: { message: string; history: any[]; context: string } }>('/ai/chat', async (request, reply) => {
+    const { message, history, context } = request.body;
+    const apiKey = process.env.GEMINI_API_KEY || '';
+
+    // Import dynamically to ensure it's loaded
+    const { chatWithMap } = await import('@geo-lens/gemini-client');
+
+    const response = await chatWithMap(history || [], message, context, apiKey);
+    return { response };
+});
+
+const start = async () => {
+    try {
+        await server.listen({ port: 3001, host: '0.0.0.0' });
+        console.log('API Server running at http://localhost:3001');
+    } catch (err) {
+        server.log.error(err);
+        process.exit(1);
+    }
+};
+
+start();
