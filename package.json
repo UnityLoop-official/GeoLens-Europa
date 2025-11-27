@@ -7,10 +7,11 @@
     ],
     "scripts": {
         "build": "npm run build --workspaces",
-        "dev": "npm run dev --workspaces",
+        "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
         "test": "npm run test --workspaces"
     },
     "devDependencies": {
+        "concurrently": "^9.2.1",
         "eslint": "^8.0.0",
         "prettier": "^3.0.0",
         "ts-node": "^10.9.2",

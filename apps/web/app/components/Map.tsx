@@ -12,14 +12,6 @@ import MapOverlay from './MapOverlay';
 import Sidebar from './Sidebar';
 import ChatPanel from './ChatPanel';
 
-// Register PMTiles Protocol
-useEffect(() => {
-    const protocol = new Protocol();
-    maplibregl.addProtocol('pmtiles', protocol.tile);
-    return () => {
-        maplibregl.removeProtocol('pmtiles');
-    };
-}, []);
 
 // Mock H3 Data generator for the overlay (since we don't have a full backend tile server yet)
 // In a real app, Deck.gl would fetch tiles directly.
@@ -51,8 +43,16 @@ export default function MapView() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        // Register PMTiles Protocol
+        const protocol = new Protocol();
+        maplibregl.addProtocol('pmtiles', protocol.tile);
+
         // Load initial mock data for visualization
         setH3Data(generateMockH3Data(41.9, 12.5));
+
+        return () => {
+            maplibregl.removeProtocol('pmtiles');
+        };
     }, []);
 
     const onHover = (info: any) => {
