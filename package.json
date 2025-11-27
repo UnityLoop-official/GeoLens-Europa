@@ -1,0 +1,21 @@
+{
+    "name": "geo-lens-eu",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "dev": "npm run dev --workspaces",
+        "test": "npm run test --workspaces"
+    },
+    "devDependencies": {
+        "eslint": "^8.0.0",
+        "prettier": "^3.0.0",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "cesium": "^1.135.0"
+    }
+}

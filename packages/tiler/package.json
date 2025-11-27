@@ -1,0 +1,13 @@
+{
+    "name": "@geo-lens/tiler",
+    "version": "0.1.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc -w"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2"
+    }
+}

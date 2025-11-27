@@ -1,0 +1,16 @@
+{
+    "name": "@geo-lens/core-geo",
+    "version": "0.1.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc -w"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "h3-js": "^4.3.0"
+    }
+}
