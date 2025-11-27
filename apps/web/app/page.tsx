@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Map from './components/Map';
+const Map = dynamic(() => import('./components/Map'), { ssr: false });
 import dynamic from 'next/dynamic';
 
 // Dynamically import Globe to avoid SSR issues with Cesium

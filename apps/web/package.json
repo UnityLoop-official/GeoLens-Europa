@@ -10,14 +10,26 @@
     "copy-cesium": "shx rm -rf public/cesium && shx cp -r ../../node_modules/cesium/Build/Cesium public/cesium"
   },
   "dependencies": {
+    "@deck.gl/layers": "^9.2.2",
+    "@deck.gl/mapbox": "^9.2.2",
+    "@deck.gl/react": "^9.2.2",
+    "@geo-lens/core-geo": "^0.1.0",
     "@geo-lens/geocube": "^0.1.0",
+    "cesium": "^1.135.0",
+    "d3-scale": "^4.0.2",
+    "deck.gl": "^9.2.2",
+    "h3-js": "^4.3.0",
     "maplibre-gl": "^5.13.0",
     "next": "16.0.5",
+    "pmtiles": "^4.3.0",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "react-map-gl": "^8.1.0",
+    "resium": "^1.19.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/d3-scale": "^3.3.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

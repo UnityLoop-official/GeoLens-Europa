@@ -1,25 +1,39 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Map, { NavigationControl } from 'react-map-gl/maplibre';
+import Map, { NavigationControl, Source, Layer } from 'react-map-gl/maplibre';
+import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Protocol } from 'pmtiles';
 import { getCellData, analyzePatch } from '../lib/api';
 import { CellScore } from '@geo-lens/geocube';
-import { H3CellScore, getCellFromLatLng, getDisk } from '@geo-lens/core-geo';
+import { getCellFromLatLng, getDisk } from '@geo-lens/core-geo';
 import MapOverlay from './MapOverlay';
+import Sidebar from './Sidebar';
+import ChatPanel from './ChatPanel';
 
-// Mock H3 Data generator
-const generateMockH3Data = (lat: number, lon: number): H3CellScore[] => {
-    const centerH3 = getCellFromLatLng(lat, lon, 7);
-    const neighbors = getDisk(centerH3, 5); // 5-ring neighborhood
+// Register PMTiles Protocol
+useEffect(() => {
+    const protocol = new Protocol();
+    maplibregl.addProtocol('pmtiles', protocol.tile);
+    return () => {
+        maplibregl.removeProtocol('pmtiles');
+    };
+}, []);
+
+// Mock H3 Data generator for the overlay (since we don't have a full backend tile server yet)
+// In a real app, Deck.gl would fetch tiles directly.
+const generateMockH3Data = (lat: number, lon: number): CellScore[] => {
+    const centerH3 = getCellFromLatLng(lat, lon, 6); // Coarser resolution for demo
+    const neighbors = getDisk(centerH3, 8); // Larger area
+
     return neighbors.map(h3Index => ({
         h3Index,
-        scores: {
-            water: Math.random(),
-            mineral: Math.random(),
-            landslide: Math.random(),
-            seismic: Math.random()
-        }
+        water: { stress: Math.random(), recharge: Math.random(), score: Math.random() },
+        landslide: { susceptibility: Math.random(), history: Math.random() > 0.9, score: Math.random() },
+        seismic: { pga: Math.random(), class: 'LOW', score: Math.random() },
+        mineral: { prospectivity: Math.random(), type: 'None', score: Math.random() },
+        metadata: { lat, lon, elevation: 0, biome: 'Unknown' }
     }));
 };
 
@@ -30,14 +44,14 @@ export default function MapView() {
         zoom: 6
     });
     const [selectedLayer, setSelectedLayer] = useState<'water' | 'mineral' | 'landslide' | 'seismic'>('water');
-    const [h3Data, setH3Data] = useState<H3CellScore[]>([]);
+    const [h3Data, setH3Data] = useState<CellScore[]>([]);
     const [hoverInfo, setHoverInfo] = useState<any>(null);
-    const [selectedCell, setSelectedCell] = useState<any>(null);
+    const [selectedCell, setSelectedCell] = useState<CellScore | null>(null);
     const [analysis, setAnalysis] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Load initial mock data
+        // Load initial mock data for visualization
         setH3Data(generateMockH3Data(41.9, 12.5));
     }, []);
 
@@ -47,21 +61,50 @@ export default function MapView() {
 
     const onClick = async (info: any) => {
         if (info.object) {
-            setSelectedCell(info.object);
+            // Fetch detailed data from backend
+            const cell = info.object as CellScore;
+            setSelectedCell(cell); // Optimistic update
             setAnalysis(null);
-            // In real app, fetch detailed data for this H3 index
+
+            try {
+                const detailedData = await getCellData(cell.h3Index);
+                setSelectedCell(detailedData);
+            } catch (e) {
+                console.error("Failed to fetch details", e);
+            }
+        }
+    };
+
+    const handleAnalyze = async () => {
+        if (!selectedCell) return;
+        setLoading(true);
+        try {
+            const result = await analyzePatch(selectedCell.h3Index, {
+                slope: 45, // Mock context
+                landslideHistory: selectedCell.landslide.history ? 'HIGH' : 'LOW'
+            });
+            setAnalysis(result);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full font-sans">
             <Map
                 {...viewState}
                 onMove={evt => setViewState(evt.viewState)}
                 style={{ width: '100%', height: '100%' }}
                 mapStyle="https://demotiles.maplibre.org/style.json"
+                pitch={45} // Tilt for 3D effect
             >
                 <NavigationControl position="top-right" />
+
+                {/* PMTiles Source Example (Hidden for now as we use Deck.gl) */}
+                {/* <Source id="pmtiles-source" type="vector" url="pmtiles://http://localhost:3001/tiles/dummy.pmtiles"> ... </Source> */}
+
                 <MapOverlay
                     data={h3Data}
                     selectedLayer={selectedLayer}
@@ -71,12 +114,15 @@ export default function MapView() {
             </Map>
 
             {/* Layer Control */}
-            <div className="absolute top-4 left-4 bg-white p-2 rounded shadow z-10 flex gap-2">
+            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur p-1.5 rounded-lg shadow-lg z-10 flex gap-1 border border-slate-200">
                 {(['water', 'mineral', 'landslide', 'seismic'] as const).map(layer => (
                     <button
                         key={layer}
                         onClick={() => setSelectedLayer(layer)}
-                        className={`px-3 py-1 rounded text-sm capitalize ${selectedLayer === layer ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${selectedLayer === layer
+                            ? 'bg-slate-800 text-white shadow-md'
+                            : 'text-slate-600 hover:bg-slate-100'
+                            }`}
                     >
                         {layer}
                     </button>
@@ -85,60 +131,29 @@ export default function MapView() {
 
             {/* Tooltip */}
             {hoverInfo && hoverInfo.object && (
-                <div className="absolute bg-black text-white p-2 rounded text-xs pointer-events-none z-20" style={{ left: hoverInfo.x, top: hoverInfo.y }}>
-                    <div>H3: {hoverInfo.object.h3Index}</div>
-                    <div>Score: {hoverInfo.object.scores[selectedLayer].toFixed(2)}</div>
-                </div>
-            )}
-
-            {/* Side Panel */}
-            {selectedCell && (
-                <div className="absolute top-4 right-4 w-80 bg-white p-4 rounded shadow-lg z-10 max-h-[90vh] overflow-y-auto text-black">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold">Cell Analysis</h2>
-                        <button onClick={() => setSelectedCell(null)} className="text-gray-500 hover:text-gray-700">✕</button>
-                    </div>
-
-                    <div className="space-y-4">
-                        <div className="text-xs text-gray-500">Index: {selectedCell.h3Index}</div>
-
-                        <div className="grid grid-cols-2 gap-2 mt-2">
-                            {Object.entries(selectedCell.scores).map(([k, v]) => (
-                                <div key={k} className="bg-gray-50 p-2 rounded border">
-                                    <div className="text-xs text-gray-500 capitalize">{k}</div>
-                                    <div className="font-mono font-bold text-lg">{(v as number).toFixed(2)}</div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <button
-                            onClick={async () => {
-                                setLoading(true);
-                                try {
-                                    // Mock call
-                                    const result = await analyzePatch(41.9, 12.5);
-                                    setAnalysis(result);
-                                } catch (e) {
-                                    console.error(e);
-                                } finally {
-                                    setLoading(false);
-                                }
-                            }}
-                            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
-                            disabled={loading}
-                        >
-                            {loading ? 'Analyzing...' : 'Analyze Patch with AI'}
-                        </button>
-
-                        {analysis && (
-                            <div className="mt-4 p-2 bg-blue-50 rounded border border-blue-100">
-                                <h4 className="font-bold text-sm text-blue-800">AI Insight</h4>
-                                <p className="text-xs text-blue-700 mt-1">{analysis.description}</p>
-                            </div>
-                        )}
+                <div
+                    className="absolute bg-slate-900/90 text-white p-3 rounded-lg text-xs pointer-events-none z-30 backdrop-blur border border-slate-700 shadow-xl"
+                    style={{ left: hoverInfo.x + 10, top: hoverInfo.y + 10 }}
+                >
+                    <div className="font-mono text-slate-400 mb-1">{hoverInfo.object.h3Index}</div>
+                    <div className="font-bold text-lg">
+                        {(hoverInfo.object[selectedLayer].score * 100).toFixed(0)}
+                        <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>
                     </div>
                 </div>
             )}
+
+            {/* Advanced Sidebar */}
+            <Sidebar
+                cell={selectedCell}
+                onClose={() => setSelectedCell(null)}
+                onAnalyze={handleAnalyze}
+                loading={loading}
+                analysis={analysis}
+            />
+
+            {/* Chat Panel */}
+            <ChatPanel />
         </div>
     );
 }
