@@ -13,7 +13,10 @@ const server = Fastify({ logger: true });
 
 server.register(cors);
 import { h3AreaRoutes } from './routes/h3-area';
+import { h3TileRoutes } from './routes/h3-tile';
+
 server.register(h3AreaRoutes);
+server.register(h3TileRoutes);
 
 // Serve Static Assets (Tiles & Data)
 server.register(fastifyStatic, {
