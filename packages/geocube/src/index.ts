@@ -40,3 +40,35 @@ export interface CellScore {
 export const calculateAggregateScore = (cell: CellScore): number => {
     return (cell.water.score + cell.landslide.score + cell.seismic.score + cell.mineral.score) / 4;
 };
+
+export interface CellFeatures {
+    h3Index: string;
+    elevation?: number;
+    slope?: number;
+    elsusClass?: number;
+    hazardPGA?: number;
+    clcClass?: number;
+}
+
+export const computeWaterScore = (features: CellFeatures): number => {
+    // Simple logic: Low slope + specific land cover = good water potential
+    const slopeScore = features.slope ? Math.max(0, 1 - features.slope / 20) : 0.5;
+    return slopeScore;
+};
+
+export const computeLandslideScore = (features: CellFeatures): number => {
+    // Slope + ELSUS class
+    const slopeFactor = features.slope ? Math.min(1, features.slope / 45) : 0;
+    const elsusFactor = features.elsusClass ? features.elsusClass / 5 : 0;
+    return (slopeFactor + elsusFactor) / 2;
+};
+
+export const computeSeismicScore = (features: CellFeatures): number => {
+    // PGA based
+    return features.hazardPGA ? Math.min(1, features.hazardPGA * 2) : 0;
+};
+
+export const computeMineralScore = (features: CellFeatures): number => {
+    // Placeholder based on CLC (e.g., Mining sites are class 7, 8, 9 in some systems, here simplified)
+    return features.clcClass === 131 ? 0.9 : 0.1; // 131 = Mineral extraction sites in CLC
+};

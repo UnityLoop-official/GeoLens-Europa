@@ -8,7 +8,8 @@
     "scripts": {
         "build": "npm run build --workspaces",
         "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
-        "test": "npm run test --workspaces"
+        "test": "npm run test --workspaces",
+        "ingest:eu": "npx tsx scripts/ingest/download/download-dem-eu.ts && npx tsx scripts/ingest/download/download-elsus.ts && npx tsx scripts/ingest/download/download-eshm20.ts && npx tsx scripts/ingest/download/download-clc.ts && npx tsx scripts/ingest/raster-to-h3/dem-to-h3.ts && npx tsx scripts/ingest/raster-to-h3/elsus-to-h3.ts && npx tsx scripts/ingest/raster-to-h3/eshm20-to-h3.ts && npx tsx scripts/ingest/raster-to-h3/clc-to-h3.ts && npx tsx scripts/ingest/aggregate/build-h3-features-eu.ts"
     },
     "devDependencies": {
         "concurrently": "^9.2.1",
@@ -18,6 +19,10 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "cesium": "^1.135.0"
+        "axios": "^1.13.2",
+        "cesium": "^1.135.0",
+        "csv-parse": "^6.1.0",
+        "csv-stringify": "^6.6.0",
+        "geotiff": "^2.1.4-beta.1"
     }
 }

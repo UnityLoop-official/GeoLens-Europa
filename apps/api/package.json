@@ -10,9 +10,13 @@
     "dependencies": {
         "@fastify/cors": "^8.5.0",
         "@fastify/static": "^6.12.0",
+        "@geo-lens/core-geo": "^0.1.0",
+        "@geo-lens/geocube": "^0.1.0",
+        "@types/pg": "^8.15.6",
         "dotenv": "^17.2.3",
         "fastify": "^4.24.3",
-        "fastify-plugin": "^4.5.1"
+        "fastify-plugin": "^4.5.1",
+        "pg": "^8.16.3"
     },
     "devDependencies": {
         "@types/node": "^20.8.10",

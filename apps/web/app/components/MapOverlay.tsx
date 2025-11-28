@@ -9,7 +9,7 @@ import { scaleLinear } from 'd3-scale';
 
 type Props = {
     data: CellScore[];
-    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic';
+    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite';
     onHover: (info: any) => void;
     onClick: (info: any) => void;
 };
@@ -19,7 +19,8 @@ const COLOR_SCALES = {
     water: scaleLinear<string>().domain([0, 1]).range(['#E3F2FD', '#0D47A1']), // Blue
     mineral: scaleLinear<string>().domain([0, 1]).range(['#FFF8E1', '#FF6F00']), // Amber/Orange
     landslide: scaleLinear<string>().domain([0, 1]).range(['#EFEBE9', '#3E2723']), // Brown
-    seismic: scaleLinear<string>().domain([0, 1]).range(['#FFEBEE', '#B71C1C'])  // Red
+    seismic: scaleLinear<string>().domain([0, 1]).range(['#FFEBEE', '#B71C1C']),  // Red
+    satellite: scaleLinear<string>().domain([0, 1]).range(['#E3F2FD', '#0D47A1']) // Fallback to blue for satellite
 };
 
 // Helper to parse hex color to [r, g, b]
@@ -51,17 +52,30 @@ export default function MapOverlay({ data, selectedLayer, onHover, onClick }: Pr
                 getHexagon: (d) => d.h3Index,
                 getFillColor: (d) => {
                     let score = 0;
-                    switch (selectedLayer) {
+                    let layerKey = selectedLayer;
+
+                    // If satellite, use water data but make it transparent
+                    if (selectedLayer === 'satellite') {
+                        layerKey = 'water';
+                    }
+
+                    switch (layerKey) {
                         case 'water': score = d.water.score; break;
                         case 'mineral': score = d.mineral.score; break;
                         case 'landslide': score = d.landslide.score; break;
                         case 'seismic': score = d.seismic.score; break;
                     }
-                    const colorHex = COLOR_SCALES[selectedLayer](score);
-                    return [...hexToRgb(colorHex), 200]; // Add alpha
+
+                    // @ts-ignore - Dynamic access
+                    const colorHex = COLOR_SCALES[layerKey](score);
+
+                    // Lower opacity for satellite mode (50 vs 200)
+                    const alpha = selectedLayer === 'satellite' ? 50 : 200;
+                    return [...hexToRgb(colorHex), alpha];
                 },
                 getElevation: (d) => {
-                    switch (selectedLayer) {
+                    const layerKey = selectedLayer === 'satellite' ? 'water' : selectedLayer;
+                    switch (layerKey) {
                         case 'water': return d.water.score * 5000;
                         case 'mineral': return d.mineral.score * 5000;
                         case 'landslide': return d.landslide.score * 5000;

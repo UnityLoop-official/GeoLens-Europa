@@ -19,7 +19,8 @@ export interface RiskAnalysisResult {
 // Initialize Gemini (API Key must be passed from the caller)
 const getModel = (apiKey: string) => {
     const genAI = new GoogleGenerativeAI(apiKey);
-    return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Using the requested Gemini 3.0 Pro Preview model
+    return genAI.getGenerativeModel({ model: "gemini-3-pro-preview" });
 };
 
 export const analyzeSatellitePatch = async (image: any, context: any): Promise<GeoVisionSummary> => {
@@ -87,7 +88,8 @@ export const chatWithMap = async (
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Using the requested Gemini 3.0 Pro Preview model
+        const model = genAI.getGenerativeModel({ model: "gemini-3-pro-preview" });
 
         const chat = model.startChat({
             history: [

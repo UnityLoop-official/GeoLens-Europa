@@ -4,7 +4,7 @@ import fastifyStatic from '@fastify/static';
 import path from 'path';
 import * as dotenv from 'dotenv';
 import { CellScore } from '@geo-lens/geocube';
-import { analyzeRiskWithContext } from '@geo-lens/gemini-client';
+// import { analyzeRiskWithContext } from '@geo-lens/gemini-client';
 
 // Load environment variables
 dotenv.config();
@@ -12,12 +12,14 @@ dotenv.config();
 const server = Fastify({ logger: true });
 
 server.register(cors);
+import { h3AreaRoutes } from './routes/h3-area';
+server.register(h3AreaRoutes);
 
-// Serve PMTiles with Range Request support (handled natively by fastify-static)
+// Serve Static Assets (Tiles & Data)
 server.register(fastifyStatic, {
-    root: path.join(__dirname, '../public/tiles'),
-    prefix: '/tiles/',
-    acceptRanges: true, // Critical for PMTiles
+    root: path.join(__dirname, '../public'),
+    prefix: '/static/', // Access via /static/tiles/... or /static/data/...
+    acceptRanges: true,
     decorateReply: false
 });
 
@@ -91,6 +93,11 @@ server.post<{ Body: { h3Index: string; context: any } }>('/ai/analyze', async (r
         slopeMean: context.slope || 0,
         landslideHistory: context.landslideHistory || 'UNKNOWN'
     };
+
+    // Dynamic import to ensure fresh code
+    const { analyzeRiskWithContext } = await import('@geo-lens/gemini-client');
+
+    console.log(`[Analyze] API Key present: ${!!apiKey}, Length: ${apiKey.length}`);
 
     // Call Real Gemini Client
     const result = await analyzeRiskWithContext(h3Index, 'mock-image-buffer', riskContext, apiKey);

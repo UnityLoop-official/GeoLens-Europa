@@ -43,7 +43,7 @@ export default function ChatPanel({ context }: { context?: any }) {
         return (
             <button
                 onClick={() => setIsOpen(true)}
-                className="absolute bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-all hover:scale-110 z-20"
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-all hover:scale-110 z-20"
             >
                 💬
             </button>
@@ -51,7 +51,7 @@ export default function ChatPanel({ context }: { context?: any }) {
     }
 
     return (
-        <div className="absolute bottom-6 right-6 w-80 bg-white shadow-2xl rounded-xl border border-slate-200 z-20 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-80 bg-white shadow-2xl rounded-xl border border-slate-200 z-20 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300">
             <div className="bg-blue-600 p-3 flex justify-between items-center text-white">
                 <h3 className="font-bold text-sm">GeoLens Assistant</h3>
                 <button onClick={() => setIsOpen(false)} className="hover:bg-blue-700 p-1 rounded">✕</button>

@@ -1,19 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-const Map = dynamic(() => import('./components/Map'), { ssr: false });
 import dynamic from 'next/dynamic';
 
-// Dynamically import Globe to avoid SSR issues with Cesium
+const Map = dynamic(() => import('./components/Map'), { ssr: false });
 const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 
 export default function Home() {
   const [mode, setMode] = useState<'2D' | '3D'>('2D');
+  const [selectedLayer, setSelectedLayer] = useState<'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite'>('water');
 
   return (
     <main className="flex min-h-screen flex-col">
       <div className="w-full h-screen relative">
-        {mode === '2D' ? <Map /> : <Globe />}
+        {mode === '2D' ? (
+          <Map selectedLayer={selectedLayer} onLayerChange={setSelectedLayer} />
+        ) : (
+          <Globe selectedLayer={selectedLayer} />
+        )}
 
         <div className="absolute top-4 left-4 bg-white p-4 rounded shadow z-10">
           <h1 className="text-xl font-bold mb-2">GeoLens Europa</h1>
