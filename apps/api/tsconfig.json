@@ -2,8 +2,20 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "outDir": "dist",
-        "rootDir": "src"
+        "rootDir": "src",
+        "paths": {
+            "@geo-lens/core-geo": ["../../packages/core-geo/src"],
+            "@geo-lens/geocube": ["../../packages/geocube/src"],
+            "@geo-lens/risk-engine": ["../../packages/risk-engine/src"],
+            "@geo-lens/datacube": ["../../packages/datacube/src"]
+        }
     },
+    "references": [
+        { "path": "../../packages/core-geo" },
+        { "path": "../../packages/geocube" },
+        { "path": "../../packages/risk-engine" },
+        { "path": "../../packages/datacube" }
+    ],
     "include": [
         "src"
     ]

@@ -1,16 +1,16 @@
 {
-    "name": "@geo-lens/geocube",
+    "name": "@geo-lens/risk-engine",
     "version": "0.2.0",
+    "description": "Deterministic and probabilistic risk computation engine for GeoLens Europa",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
         "dev": "tsc -w"
     },
+    "keywords": ["geospatial", "risk", "h3", "multi-hazard"],
     "devDependencies": {
         "typescript": "^5.2.2"
     },
-    "dependencies": {
-        "@geo-lens/risk-engine": "^0.2.0"
-    }
+    "dependencies": {}
 }

@@ -31,6 +31,9 @@
       ],
       "@geo-lens/geocube": [
         "../../packages/geocube/src/index.ts"
+      ],
+      "@geo-lens/risk-engine": [
+        "../../packages/risk-engine/src/index.ts"
       ]
     }
   },

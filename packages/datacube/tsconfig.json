@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@geo-lens/core-geo": ["../core-geo/src"]
+    }
+  },
+  "references": [
+    { "path": "../core-geo" }
+  ],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "tests"]
+}

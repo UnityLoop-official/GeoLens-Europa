@@ -4,7 +4,6 @@ import fastifyStatic from '@fastify/static';
 import path from 'path';
 import * as dotenv from 'dotenv';
 import { CellScore } from '@geo-lens/geocube';
-// import { analyzeRiskWithContext } from '@geo-lens/gemini-client';
 
 // Load environment variables
 dotenv.config();
@@ -13,10 +12,14 @@ const server = Fastify({ logger: true });
 
 server.register(cors);
 import { h3AreaRoutes } from './routes/h3-area';
+import { h3AreaV2Routes } from './routes/h3-area-v2';
 import { h3TileRoutes } from './routes/h3-tile';
+import { aiRoutes } from './routes/ai';
 
-server.register(h3AreaRoutes);
+server.register(h3AreaRoutes); // V1 - backward compatible
+server.register(h3AreaV2Routes); // V2 - enhanced with RiskDistribution
 server.register(h3TileRoutes);
+server.register(aiRoutes); // AI - optional enhancement (works without GEMINI_API_KEY)
 
 // Serve Static Assets (Tiles & Data)
 server.register(fastifyStatic, {
@@ -83,46 +86,10 @@ server.get<{ Params: { h3Index: string } }>('/cell/:h3Index', async (request, re
     return response;
 });
 
-server.post<{ Body: { h3Index: string; context: any } }>('/ai/analyze', async (request, reply) => {
-    const { h3Index, context } = request.body;
-    const apiKey = process.env.GEMINI_API_KEY || '';
-
-    if (!apiKey) {
-        request.log.warn('GEMINI_API_KEY not found in environment variables.');
-    }
-
-    // Map frontend context to RiskContext
-    const riskContext = {
-        slopeMean: context.slope || 0,
-        landslideHistory: context.landslideHistory || 'UNKNOWN'
-    };
-
-    // Dynamic import to ensure fresh code
-    const { analyzeRiskWithContext } = await import('@geo-lens/gemini-client');
-
-    console.log(`[Analyze] API Key present: ${!!apiKey}, Length: ${apiKey.length}`);
-
-    // Call Real Gemini Client
-    const result = await analyzeRiskWithContext(h3Index, 'mock-image-buffer', riskContext, apiKey);
-
-    return {
-        risk_confirmation: result.visualConfirmation,
-        confidence: result.confidence,
-        key_visual_clues: ["Analysis based on provided context"], // Placeholder as real image analysis isn't fully wired
-        reasoning: result.reasoning
-    };
-});
-
-server.post<{ Body: { message: string; history: any[]; context: string } }>('/ai/chat', async (request, reply) => {
-    const { message, history, context } = request.body;
-    const apiKey = process.env.GEMINI_API_KEY || '';
-
-    // Import dynamically to ensure it's loaded
-    const { chatWithMap } = await import('@geo-lens/gemini-client');
-
-    const response = await chatWithMap(history || [], message, context, apiKey);
-    return { response };
-});
+// LEGACY AI ENDPOINTS - DEPRECATED
+// These endpoints are kept for backward compatibility but should not be used.
+// Use /api/ai/* endpoints instead (see routes/ai.ts)
+// TODO: Remove after frontend migration (deprecation date: TBD)
 
 const start = async () => {
     try {

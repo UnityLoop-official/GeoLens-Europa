@@ -1,0 +1,26 @@
+{
+  "name": "@geo-lens/datacube",
+  "version": "0.1.0",
+  "description": "Spatio-temporal data cube for GeoLens Europa - H3 + time-series storage",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "h3",
+    "datacube",
+    "geospatial",
+    "time-series",
+    "risk-assessment"
+  ],
+  "author": "GeoLens Team",
+  "license": "MIT",
+  "dependencies": {
+    "h3-js": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

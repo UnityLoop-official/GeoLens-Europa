@@ -1,3 +1,23 @@
+/**
+ * @geo-lens/geocube
+ *
+ * Domain types and legacy compatibility layer for risk scoring
+ *
+ * VERSION 0.2.0:
+ * - All scoring logic now delegated to @geo-lens/risk-engine
+ * - This package maintains backward compatibility and domain types
+ * - For new code, use @geo-lens/risk-engine directly
+ */
+
+import {
+    computeSimpleScores,
+    CellFeatures as RiskEngineCellFeatures
+} from '@geo-lens/risk-engine';
+
+// ============================================================================
+// DOMAIN TYPES
+// ============================================================================
+
 export interface CellScore {
     h3Index: string;
 
@@ -48,27 +68,47 @@ export interface CellFeatures {
     elsusClass?: number;
     hazardPGA?: number;
     clcClass?: number;
+    // Allow extensibility like risk-engine's CellFeatures
+    [key: string]: number | string | boolean | null | undefined;
 }
 
+// ============================================================================
+// BACKWARD-COMPATIBLE SCORE FUNCTIONS
+// All delegate to @geo-lens/risk-engine
+// ============================================================================
+
+/**
+ * @deprecated Use computeWaterRisk from @geo-lens/risk-engine instead
+ * Kept for backward compatibility
+ */
 export const computeWaterScore = (features: CellFeatures): number => {
-    // Simple logic: Low slope + specific land cover = good water potential
-    const slopeScore = features.slope ? Math.max(0, 1 - features.slope / 20) : 0.5;
-    return slopeScore;
+    const scores = computeSimpleScores(features as RiskEngineCellFeatures);
+    return scores.waterScore;
 };
 
+/**
+ * @deprecated Use computeLandslideRisk from @geo-lens/risk-engine instead
+ * Kept for backward compatibility
+ */
 export const computeLandslideScore = (features: CellFeatures): number => {
-    // Slope + ELSUS class
-    const slopeFactor = features.slope ? Math.min(1, features.slope / 45) : 0;
-    const elsusFactor = features.elsusClass ? features.elsusClass / 5 : 0;
-    return (slopeFactor + elsusFactor) / 2;
+    const scores = computeSimpleScores(features as RiskEngineCellFeatures);
+    return scores.landslideScore;
 };
 
+/**
+ * @deprecated Use computeSeismicRisk from @geo-lens/risk-engine instead
+ * Kept for backward compatibility
+ */
 export const computeSeismicScore = (features: CellFeatures): number => {
-    // PGA based
-    return features.hazardPGA ? Math.min(1, features.hazardPGA * 2) : 0;
+    const scores = computeSimpleScores(features as RiskEngineCellFeatures);
+    return scores.seismicScore;
 };
 
+/**
+ * @deprecated Use computeMineralRisk from @geo-lens/risk-engine instead
+ * Kept for backward compatibility
+ */
 export const computeMineralScore = (features: CellFeatures): number => {
-    // Placeholder based on CLC (e.g., Mining sites are class 7, 8, 9 in some systems, here simplified)
-    return features.clcClass === 131 ? 0.9 : 0.1; // 131 = Mineral extraction sites in CLC
+    const scores = computeSimpleScores(features as RiskEngineCellFeatures);
+    return scores.mineralScore;
 };
