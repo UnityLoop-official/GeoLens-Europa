@@ -14,7 +14,7 @@
     "@deck.gl/mapbox": "^9.2.2",
     "@deck.gl/react": "^9.2.2",
     "@geo-lens/core-geo": "^0.1.0",
-    "@geo-lens/geocube": "^0.1.0",
+    "@geo-lens/geocube": "^0.2.0",
     "cesium": "^1.135.0",
     "d3-scale": "^4.0.2",
     "deck.gl": "^9.2.2",

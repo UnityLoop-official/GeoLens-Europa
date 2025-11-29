@@ -2,13 +2,17 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { Viewer, Entity, Primitive, CesiumComponentRef } from 'resium';
-import { Cartesian3, Color, GeometryInstance, PolygonGeometry, PerInstanceColorAppearance, ColorGeometryInstanceAttribute, ShowGeometryInstanceAttribute, PolygonHierarchy } from 'cesium';
+import { Cartesian3, Color, GeometryInstance, PolygonGeometry, PerInstanceColorAppearance, ColorGeometryInstanceAttribute, ShowGeometryInstanceAttribute, PolygonHierarchy, Ion } from 'cesium';
 import { cellToBoundary } from 'h3-js';
 import { CellScore } from '@geo-lens/geocube';
 
-// Set base URL for Cesium assets
+// Set Cesium Ion access token
 if (typeof window !== 'undefined') {
     (window as any).CESIUM_BASE_URL = '/cesium';
+
+    // Configure Cesium Ion token
+    Ion.defaultAccessToken = process.env.NEXT_PUBLIC_CESIUM_ION_TOKEN ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTQ1OTgzMi1mZTBmLTRhMmItYTFmNi01NzllNzI3YmE1MjgiLCJpZCI6MzY1MDY3LCJpYXQiOjE3NjQ0Mjk3MzR9.asySfyHzM3vnP8tx43Gq5susyuKWPHOuOmseVH7ReXg';
 }
 
 // Color scales (matching MapOverlay.tsx)

@@ -1,0 +1,192 @@
+
+> api@0.1.0 dev
+> tsx watch src/index.ts
+
+[H3CacheV1] Loaded 88890 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+{"level":50,"time":1764413640344,"pid":70336,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+12:19:37 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1671 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+{"level":50,"time":1764415181613,"pid":40572,"hostname":"DacPC","err":{"type":"FastifyError","message":"fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed","stack":"FastifyError: fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed\n    at Object.checkVersion (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginUtils.js:125:11)\n    at Object.registerPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginUtils.js:148:16)\n    at Boot.override (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginOverride.js:28:57)\n    at Boot._loadPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\boot.js:425:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_PLUGIN_VERSION_MISMATCH","name":"FastifyError","statusCode":500},"msg":"fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed"}
+13:12:37 [tsx] change in ./src\index.ts Rerunning...
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module '@fastify/compress'
+Require stack:
+- C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:1004)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:3:2630
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:760)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///C:/Users/dacan/OneDrive/Desktop/Geo_a/geo-lens-eu/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\apps\\api\\src\\index.ts'
+  ]
+}
+
+Node.js v22.19.0
+c14:09:09 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":50,"time":1764421755800,"pid":60040,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+14:11:50 [tsx] change in ./src\index.ts Rerunning...
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts:20:17: ERROR: Expected ";" but found ":"
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c14:12:36 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+{"level":50,"time":1764421961025,"pid":61016,"hostname":"DacPC","err":{"type":"FastifyError","message":"Method 'GET' already declared for route '/cell/:h3Index'","stack":"FastifyError: Method 'GET' already declared for route '/cell/:h3Index'\n    at Object.addNewRoute (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:371:19)\n    at Object.route (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:265:19)\n    at Object.prepareRoute (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:167:18)\n    at Object._get [as get] (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\fastify.js:262:34)\n    at cellRoutes (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\apps\\api\\src\\routes\\cell.ts:8:13)\n    at Plugin.exec (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\lib\\plugin.js:125:28)\n    at Boot._loadPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\boot.js:432:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_DUPLICATED_ROUTE","name":"FastifyError","statusCode":500},"msg":"Method 'GET' already declared for route '/cell/:h3Index'"}
+14:13:05 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+{"level":30,"time":1764421990080,"pid":59812,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+14:16:00 [tsx] change in ./src\routes\cell.ts Rerunning...
+c[H3CacheV1] Loaded 89676 records.
+[H3CacheV2] Loaded 1910 records.
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\routes\cell.ts:14:19: ERROR: Unexpected "{"
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+14:16:33 [tsx] change in ./src\routes\cell.ts Rerunning...
+c[H3CacheV1] Loaded 89676 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+{"level":30,"time":1764422197082,"pid":68176,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+14:22:06 [tsx] change in ./src\routes\cell.ts Rerunning...
+c[H3CacheV1] Loaded 89676 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":50,"time":1764422529652,"pid":65360,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+14:27:39 [tsx] change in ./src\plugins\rateLimit.ts Rerunning...
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\plugins\rateLimit.ts:20:0: ERROR: Expected "*/" to terminate multi-line comment
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c14:28:17 [tsx] change in ./src\plugins\rateLimit.ts Rerunning...
+c[H3CacheV1] Loaded 89676 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+{"level":30,"time":1764422902661,"pid":60940,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+15:02:11 [tsx] change in ./src\routes\cell.ts Rerunning...
+c[H3CacheV1] Loaded 89676 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":50,"time":1764424935721,"pid":48684,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+15:22:58 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 91405 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+{"level":50,"time":1764426183767,"pid":12552,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+15:23:07 [tsx] change in ./src\index.ts Rerunning...
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts:72:6: ERROR: The symbol "server" has already been declared
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c15:24:02 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 91405 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+{"level":50,"time":1764426247492,"pid":74812,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:10:47 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 94179 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+{"level":50,"time":1764429052288,"pid":71824,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:42:32 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 94480 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+{"level":50,"time":1764430956600,"pid":16368,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:51:12 [tsx] change in ./src\index.ts Rerunning...
+c[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{"level":30,"time":1764431475503,"pid":46388,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+16:52:03 [tsx] change in ./src\index.ts Rerunning...
+c[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+{"level":50,"time":1764431525554,"pid":29556,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:56:26 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1357 records.
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+{"level":50,"time":1764431789431,"pid":61168,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}

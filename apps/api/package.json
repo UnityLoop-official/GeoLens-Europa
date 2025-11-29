@@ -8,7 +8,9 @@
         "start": "node dist/index.js"
     },
     "dependencies": {
+        "@fastify/compress": "^7.0.3",
         "@fastify/cors": "^8.5.0",
+        "@fastify/rate-limit": "^9.0.1",
         "@fastify/static": "^6.12.0",
         "@geo-lens/core-geo": "^0.1.0",
         "@geo-lens/datacube": "^0.1.0",

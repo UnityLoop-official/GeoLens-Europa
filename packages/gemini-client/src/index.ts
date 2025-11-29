@@ -29,7 +29,7 @@ export const analyzeSatellitePatch = async (image: any, context: any): Promise<G
 
 export const analyzeRiskWithContext = async (
     h3Index: string,
-    imageBuffer: Buffer | string, // Not used in MVP but ready for real image
+    imageBuffer: Buffer | string | null,
     context: RiskContext,
     apiKey: string
 ): Promise<RiskAnalysisResult> => {
@@ -44,28 +44,55 @@ export const analyzeRiskWithContext = async (
 
     try {
         const model = getModel(apiKey);
-        const prompt = `
-        Role: Expert Geologist & Geomorphologist
-        Task: Analyze the environmental risk for H3 cell ${h3Index}.
-        
-        Context Data:
-        - Slope Mean: ${context.slopeMean} degrees
-        - Landslide History: ${context.landslideHistory}
-        
-        Question:
-        Based on this context, assess the likelihood of landslide risk. 
-        Return a JSON object with:
-        - visualConfirmation: boolean (true if risk is high)
-        - confidence: number (0-1)
-        - reasoning: string (concise explanation)
-        `;
 
-        const result = await model.generateContent(prompt);
+        const promptParts: any[] = [
+            `
+            Role: Expert Geologist & Geomorphologist
+            Task: Analyze the environmental risk for H3 cell ${h3Index}.
+            
+            Context Data:
+            - Slope Mean: ${context.slopeMean} degrees
+            - Landslide History: ${context.landslideHistory}
+            
+            Question:
+            Based on this context ${imageBuffer ? "and the provided satellite imagery" : ""}, assess the likelihood of landslide risk. 
+            ${imageBuffer ? "Look for visual evidence such as scarring, vegetation loss, or steep terrain features." : ""}
+            
+            Return a JSON object with:
+            - visualConfirmation: boolean (true if risk is high and visually supported)
+            - confidence: number (0-1)
+            - reasoning: string (concise explanation)
+
+            IMPORTANT: Return ONLY the JSON object. Do not include markdown formatting or explanation text outside the JSON.
+            `
+        ];
+
+        if (imageBuffer) {
+            const imageBase64 = Buffer.isBuffer(imageBuffer)
+                ? imageBuffer.toString('base64')
+                : imageBuffer;
+
+            promptParts.push({
+                inlineData: {
+                    data: imageBase64,
+                    mimeType: "image/jpeg"
+                }
+            });
+        }
+
+        const result = await model.generateContent(promptParts);
         const response = await result.response;
         const text = response.text();
 
-        // Clean markdown code blocks if present
-        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        // Attempt to find JSON object in the response
+        let jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const firstBrace = jsonStr.indexOf('{');
+        const lastBrace = jsonStr.lastIndexOf('}');
+
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            jsonStr = jsonStr.substring(firstBrace, lastBrace + 1);
+        }
+
         return JSON.parse(jsonStr) as RiskAnalysisResult;
 
     } catch (error) {

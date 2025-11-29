@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import MapLibre, { NavigationControl, Source, Layer } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Protocol } from 'pmtiles';
 import { getCellData, analyzePatch } from '../lib/api';
 import { CellScore } from '@geo-lens/geocube';
-import MapOverlay from './MapOverlay';
+import DeckGL from '@deck.gl/react';
+import { getOverlayLayers } from './MapOverlay';
 import Sidebar from './Sidebar';
 import ChatPanel from './ChatPanel';
+
+// Compact cell format from tile endpoint
+type CompactCell = {
+    i: string;   // h3Index
+    w: number;   // water score
+    l: number;   // landslide score
+    s: number;   // seismic score
+    m: number;   // mineral score
+    e?: number;  // elevation (optional)
+};
 
 interface Props {
     selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite';
@@ -45,20 +56,51 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
         setHoverInfo(info);
     };
 
-    const onClick = async (info: any) => {
-        if (info.object) {
-            // Fetch detailed data from backend
-            const cell = info.object as CellScore;
-            setSelectedCell(cell); // Optimistic update
-            setAnalysis(null);
-
+    // Debounced fetch for detailed cell data
+    const fetchTimeout = useRef<NodeJS.Timeout | null>(null);
+    const fetchDetailedData = useCallback((h3Index: string) => {
+        if (fetchTimeout.current) clearTimeout(fetchTimeout.current);
+        fetchTimeout.current = setTimeout(async () => {
             try {
-                const detailedData = await getCellData(cell.h3Index);
+                const detailedData = await getCellData(h3Index);
                 setSelectedCell(detailedData);
             } catch (e) {
                 console.error("Failed to fetch details", e);
             }
+        }, 300); // 300ms debounce
+    }, []);
+
+    const onClick = async (info: any) => {
+        // Send log to server
+        fetch('http://localhost:3001/api/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'DECK_CLICK', info: { object: info.object, layerId: info.layer?.id } })
+        }).catch(() => { });
+
+        if (!info.object) {
+            console.log("[Map] Click without object", info);
+            return;
         }
+
+        const compactCell = info.object as CompactCell;
+        console.log("[Map] Click on CompactCell", compactCell);
+
+        // Create mock CellScore for instant UI update
+        const mockCell: CellScore = {
+            h3Index: compactCell.i,
+            water: { stress: 0, recharge: 0, score: compactCell.w },
+            landslide: { susceptibility: compactCell.l, history: false, score: compactCell.l },
+            seismic: { pga: 0, class: 'LOW', score: compactCell.s },
+            mineral: { prospectivity: compactCell.m, type: 'Unknown', score: compactCell.m },
+            metadata: { lat: 0, lon: 0, elevation: compactCell.e || 0, biome: 'Unknown' }
+        };
+
+        setSelectedCell(mockCell); // Instant optimistic update
+        setAnalysis(null);
+
+        // Fetch detailed data with debounce
+        fetchDetailedData(compactCell.i);
     };
 
     const handleAnalyze = async () => {
@@ -103,7 +145,8 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                     <span>🛰️</span> Satellite
                 </button>
                 <div className="w-px bg-slate-300 mx-1" />
-                {(['water', 'mineral', 'landslide', 'seismic'] as const).map(layer => (
+                {/* Risk Engine V1: Only water, landslide, seismic (mineral hidden) */}
+                {(['water', 'landslide', 'seismic'] as const).map(layer => (
                     <button
                         key={layer}
                         onClick={() => onLayerChange(layer)}
@@ -117,47 +160,44 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                 ))}
             </div>
 
-            <MapLibre
-                {...viewState}
-                onMove={evt => setViewState(evt.viewState)}
-                onMoveEnd={onMoveEnd}
-                style={{ width: '100%', height: '100%' }}
-                mapStyle="https://demotiles.maplibre.org/style.json"
-                pitch={45}
+            <DeckGL
+                initialViewState={viewState}
+                controller={true}
+                onViewStateChange={({ viewState }) => setViewState(viewState as any)}
+                layers={!showZoomMsg ? getOverlayLayers({ selectedLayer, onHover, onClick }) : []}
+                onClick={onClick}
+                onHover={onHover}
+                pickingRadius={5}
             >
-                <NavigationControl position="top-right" />
+                <MapLibre
+                    style={{ width: '100%', height: '100%' }}
+                    mapStyle="https://demotiles.maplibre.org/style.json"
+                >
+                    <NavigationControl position="top-right" />
 
-                {/* Sentinel-2 Cloudless WMS (EOX) */}
-                {selectedLayer === 'satellite' && (
-                    <Source
-                        id="sentinel2-source"
-                        type="raster"
-                        tiles={[
-                            'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'
-                        ]}
-                        tileSize={256}
-                        attribution="Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2020)"
-                    >
-                        <Layer id="sentinel2-layer" type="raster" beforeId="h3-layer" />
-                    </Source>
-                )}
+                    {/* Sentinel-2 Cloudless WMS (EOX) */}
+                    {selectedLayer === 'satellite' && (
+                        <Source
+                            id="sentinel2-source"
+                            type="raster"
+                            tiles={[
+                                'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'
+                            ]}
+                            tileSize={256}
+                            attribution="Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2020)"
+                        >
+                            <Layer id="sentinel2-layer" type="raster" beforeId="h3-tile-layer" />
+                        </Source>
+                    )}
 
-                {/* ESHM20 Seismic Hazard WMS (EFEHR) - Placeholder WMS as direct URL requires specific ID */}
-                {selectedLayer === 'seismic' && (
-                    <div className="absolute bottom-20 left-6 bg-white/90 backdrop-blur p-2 rounded text-xs text-slate-500 z-10">
-                        Source: ESHM20 (EFEHR) via GeoLens
-                    </div>
-                )}
-
-                {/* Only render overlay if zoomed in enough */}
-                {!showZoomMsg && (
-                    <MapOverlay
-                        selectedLayer={selectedLayer}
-                        onHover={onHover}
-                        onClick={onClick}
-                    />
-                )}
-            </MapLibre>
+                    {/* ESHM20 Seismic Hazard WMS (EFEHR) - Placeholder WMS as direct URL requires specific ID */}
+                    {selectedLayer === 'seismic' && (
+                        <div className="absolute bottom-20 left-6 bg-white/90 backdrop-blur p-2 rounded text-xs text-slate-500 z-10">
+                            Source: ESHM20 (EFEHR) via GeoLens
+                        </div>
+                    )}
+                </MapLibre>
+            </DeckGL>
 
             {/* Tooltip */}
             {hoverInfo && hoverInfo.object && (
@@ -165,11 +205,15 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                     className="absolute bg-slate-900/90 text-white p-3 rounded-lg text-xs pointer-events-none z-30 backdrop-blur border border-slate-700 shadow-xl"
                     style={{ left: hoverInfo.x + 10, top: hoverInfo.y + 10 }}
                 >
-                    <div className="font-mono text-slate-400 mb-1">{hoverInfo.object.h3Index}</div>
+                    <div className="font-mono text-slate-400 mb-1">{hoverInfo.object.i}</div>
                     <div className="font-bold text-lg">
                         {selectedLayer === 'satellite'
                             ? 'N/A'
-                            : (hoverInfo.object[selectedLayer]?.score * 100).toFixed(0)
+                            : (() => {
+                                const obj = hoverInfo.object as CompactCell;
+                                const scoreMap = { water: obj.w, mineral: obj.m, landslide: obj.l, seismic: obj.s };
+                                return (scoreMap[selectedLayer] * 100).toFixed(0);
+                            })()
                         }
                         {selectedLayer !== 'satellite' && <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>}
                     </div>

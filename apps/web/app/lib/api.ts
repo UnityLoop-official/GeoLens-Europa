@@ -3,7 +3,7 @@ import { CellScore } from '@geo-lens/geocube';
 const API_URL = 'http://localhost:3001';
 
 export const getCellData = async (h3Index: string): Promise<CellScore> => {
-    const res = await fetch(`${API_URL}/cell/${h3Index}`);
+    const res = await fetch(`${API_URL}/api/cell/${h3Index}`);
     if (!res.ok) throw new Error('Failed to fetch cell data');
     return res.json();
 };

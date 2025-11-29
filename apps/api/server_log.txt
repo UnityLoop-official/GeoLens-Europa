@@ -1,0 +1,371 @@
+
+> api@0.1.0 dev
+> tsx watch src/index.ts
+
+[H3Cache] Loaded 88890 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":30,"time":1764413090661,"pid":21956,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+{"level":30,"time":1764413118484,"pid":21956,"hostname":"DacPC","reqId":"req-1","req":{"method":"GET","url":"/api/v2/h3/area?minLon=12.0&minLat=41.0&maxLon=13.0&maxLat=42.0&res=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":51227},"msg":"incoming request"}
+[OrchestratorV2] Request: bbox=[12,41,13,42] res=7 timestamp=latest
+[OrchestratorV2] Generated 1671 cells in 118ms
+[OrchestratorV2] Cache: 0 hits, 1671 misses
+[OrchestratorV2] Using datacube backend
+[DemAdapter] Ensuring coverage for {
+  minLon: 12,
+  minLat: 41,
+  maxLon: 13,
+  maxLat: 42,
+  resolution: 7,
+  timestamp: 'latest',
+  riskConfig: {
+    missingDataStrategy: 'conservative',
+    computeQuantiles: false,
+    generateExplanations: false
+  }
+}
+[ElsusAdapter] Checking ELSUS coverage...
+[Eshm20Adapter] Checking ESHM20 coverage...
+[ClcAdapter] Checking CLC coverage...
+[OrchestratorV2] Completed: 1671 cells in 202ms
+  - Generate cells: 118ms
+  - Cache lookup: 0ms
+  - Data fetch: 56ms
+  - Risk computation: 27ms
+{"level":30,"time":1764413118730,"pid":21956,"hostname":"DacPC","reqId":"req-1","res":{"statusCode":200},"responseTime":245.3444001674652,"msg":"request completed"}
+{"level":30,"time":1764413118950,"pid":21956,"hostname":"DacPC","reqId":"req-2","req":{"method":"GET","url":"/api/ai/status","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":51229},"msg":"incoming request"}
+[AI] No AI provider configured - using NoOp (core functionality available)
+{"level":30,"time":1764413118951,"pid":21956,"hostname":"DacPC","reqId":"req-2","res":{"statusCode":200},"responseTime":1.555799961090088,"msg":"request completed"}
+{"level":30,"time":1764413138549,"pid":21956,"hostname":"DacPC","reqId":"req-3","req":{"method":"GET","url":"/api/v2/h3/area?minLon=12.0&minLat=41.0&maxLon=13.0&maxLat=42.0&res=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":51238},"msg":"incoming request"}
+[OrchestratorV2] Request: bbox=[12,41,13,42] res=7 timestamp=latest
+[OrchestratorV2] Generated 1671 cells in 21ms
+[OrchestratorV2] Cache: 0 hits, 1671 misses
+[OrchestratorV2] Using datacube backend
+[DemAdapter] Ensuring coverage for {
+  minLon: 12,
+  minLat: 41,
+  maxLon: 13,
+  maxLat: 42,
+  resolution: 7,
+  timestamp: 'latest',
+  riskConfig: {
+    missingDataStrategy: 'conservative',
+    computeQuantiles: false,
+    generateExplanations: false
+  }
+}
+[ElsusAdapter] Checking ELSUS coverage...
+[Eshm20Adapter] Checking ESHM20 coverage...
+[ClcAdapter] Checking CLC coverage...
+[OrchestratorV2] Completed: 1671 cells in 53ms
+  - Generate cells: 21ms
+  - Cache lookup: 0ms
+  - Data fetch: 17ms
+  - Risk computation: 15ms
+{"level":30,"time":1764413138639,"pid":21956,"hostname":"DacPC","reqId":"req-3","res":{"statusCode":200},"responseTime":89.17919993400574,"msg":"request completed"}
+{"level":30,"time":1764413145992,"pid":21956,"hostname":"DacPC","reqId":"req-4","req":{"method":"POST","url":"/api/ai/analyze","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":51243},"msg":"incoming request"}
+{"level":30,"time":1764413145995,"pid":21956,"hostname":"DacPC","reqId":"req-4","res":{"statusCode":400},"err":{"type":"SyntaxError","message":"Expected property name or '}' in JSON at position 1 (line 1 column 2)","stack":"SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)","statusCode":400},"msg":"Expected property name or '}' in JSON at position 1 (line 1 column 2)"}
+{"level":30,"time":1764413145997,"pid":21956,"hostname":"DacPC","reqId":"req-4","res":{"statusCode":400},"responseTime":4.425600051879883,"msg":"request completed"}
+{"level":30,"time":1764413289782,"pid":21956,"hostname":"DacPC","reqId":"req-5","req":{"method":"POST","url":"/api/ai/analyze","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":50019},"msg":"incoming request"}
+{"level":30,"time":1764413289784,"pid":21956,"hostname":"DacPC","reqId":"req-5","res":{"statusCode":200},"responseTime":2.4743001461029053,"msg":"request completed"}
+11:51:10 [tsx] change in ./src\services\h3Cache.ts Rerunning...
+c11:51:12 [tsx] change in ./src\services\h3Cache.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":30,"time":1764413473990,"pid":73744,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:51:27 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{"level":30,"time":1764413489053,"pid":20412,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:51:40 [tsx] change in ./src\services\h3Cache.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+{"level":30,"time":1764413501669,"pid":31808,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:51:46 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+{"level":30,"time":1764413508072,"pid":47592,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:52:04 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":30,"time":1764413527141,"pid":73288,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:52:16 [tsx] change in ./src\services\h3Cache.ts Restarting...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+{"level":30,"time":1764413539073,"pid":83840,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:52:59 [tsx] change in ./src\services\h3Cache.ts Restarting...
+c[H3CacheV1] Loaded 88890 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+{"level":30,"time":1764413581847,"pid":62168,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:53:09 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c11:53:11 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c11:53:12 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c[H3CacheV1] Loaded 88890 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒæÑ sync secrets across teammates & machines: https://dotenvx.com/ops
+{"level":30,"time":1764413594996,"pid":19816,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+11:53:22 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c11:53:24 [tsx] change in ./src\services\tileOrchestratorV2.ts Restarting...
+c[H3CacheV1] Loaded 88890 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":30,"time":1764413606966,"pid":66724,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+{"level":30,"time":1764413664411,"pid":66724,"hostname":"DacPC","reqId":"req-1","req":{"method":"GET","url":"/api/v2/h3/area?minLon=12.0&minLat=41.0&maxLon=13.0&maxLat=42.0&res=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62780},"msg":"incoming request"}
+[OrchestratorV2] Request: bbox=[12,41,13,42] res=7 timestamp=latest
+[OrchestratorV2] Generated 1671 cells in 106ms
+[OrchestratorV2] Cache: 0 hits, 1671 misses
+[OrchestratorV2] Using datacube backend
+[DemAdapter] Ensuring coverage for {
+  minLon: 12,
+  minLat: 41,
+  maxLon: 13,
+  maxLat: 42,
+  resolution: 7,
+  timestamp: 'latest',
+  riskConfig: {
+    missingDataStrategy: 'conservative',
+    computeQuantiles: false,
+    generateExplanations: false
+  }
+}
+[ElsusAdapter] Checking ELSUS coverage...
+[Eshm20Adapter] Checking ESHM20 coverage...
+[ClcAdapter] Checking CLC coverage...
+[OrchestratorV2] Completed: 1671 cells in 203ms
+  - Generate cells: 106ms
+  - Cache lookup: 4ms
+  - Data fetch: 57ms
+  - Risk computation: 36ms
+{"level":30,"time":1764413664660,"pid":66724,"hostname":"DacPC","reqId":"req-1","res":{"statusCode":200},"responseTime":248.90000009536743,"msg":"request completed"}
+[H3CacheV2] Saved 1671 records.
+{"level":30,"time":1764413667492,"pid":66724,"hostname":"DacPC","reqId":"req-2","req":{"method":"GET","url":"/api/v2/h3/area?minLon=12.0&minLat=41.0&maxLon=13.0&maxLat=42.0&res=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62784},"msg":"incoming request"}
+[OrchestratorV2] Request: bbox=[12,41,13,42] res=7 timestamp=latest
+[OrchestratorV2] Generated 1671 cells in 24ms
+[OrchestratorV2] Cache: 1671 hits, 0 misses
+{"level":30,"time":1764413667538,"pid":66724,"hostname":"DacPC","reqId":"req-2","res":{"statusCode":200},"responseTime":45.92260003089905,"msg":"request completed"}
+11:56:58 [tsx] change in ./src\routes\h3-area-v2.ts Restarting...
+c11:57:00 [tsx] change in ./src\routes\h3-area-v2.ts Restarting...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1671 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+{"level":30,"time":1764413823246,"pid":65740,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+12:12:52 [tsx] change in ./..\..\packages\datacube\src\index.ts Rerunning...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1671 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: Γ£à audit secrets and track compliance: https://dotenvx.com/ops
+{"level":50,"time":1764414776027,"pid":19596,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+12:19:37 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1671 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+{"level":50,"time":1764415181601,"pid":67556,"hostname":"DacPC","err":{"type":"FastifyError","message":"fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed","stack":"FastifyError: fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed\n    at Object.checkVersion (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginUtils.js:125:11)\n    at Object.registerPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginUtils.js:148:16)\n    at Boot.override (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\pluginOverride.js:28:57)\n    at Boot._loadPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\boot.js:425:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_PLUGIN_VERSION_MISMATCH","name":"FastifyError","statusCode":500},"msg":"fastify-plugin: @fastify/rate-limit - expected '5.x' fastify version, '4.29.1' is installed"}
+12:46:10 [tsx] change in ./src\services\ai\gemini.ts Rerunning...
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\plugins\rateLimit.ts:24:19: ERROR: Unexpected "fp"
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c12:52:39 [tsx] change in ./src\services\ai\gemini.ts Rerunning...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒæÑ sync secrets across teammates & machines: https://dotenvx.com/ops
+{"level":50,"time":1764417161437,"pid":37692,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+12:53:02 [tsx] change in ./src\services\ai\gemini.ts Rerunning...
+c12:53:03 [tsx] change in ./src\services\h3Cache.ts Restarting...
+c[H3CacheV1] Loaded 88890 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+{"level":50,"time":1764417186204,"pid":29764,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+13:12:01 [tsx] change in ./src\routes\h3-area-v2.ts Rerunning...
+c[H3CacheV1] Loaded 89636 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+{"level":50,"time":1764418324102,"pid":69648,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+13:12:37 [tsx] change in ./src\index.ts Rerunning...
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module '@fastify/compress'
+Require stack:
+- C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:1004)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:3:2630
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:760)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\tsx\dist\register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///C:/Users/dacan/OneDrive/Desktop/Geo_a/geo-lens-eu/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\apps\\api\\src\\index.ts'
+  ]
+}
+
+Node.js v22.19.0
+c14:09:09 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{"level":50,"time":1764421755427,"pid":25252,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+14:11:50 [tsx] change in ./src\index.ts Rerunning...
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts:20:17: ERROR: Expected ";" but found ":"
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c14:12:36 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+{"level":50,"time":1764421961047,"pid":71372,"hostname":"DacPC","err":{"type":"FastifyError","message":"Method 'GET' already declared for route '/cell/:h3Index'","stack":"FastifyError: Method 'GET' already declared for route '/cell/:h3Index'\n    at Object.addNewRoute (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:371:19)\n    at Object.route (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:265:19)\n    at Object.prepareRoute (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\lib\\route.js:167:18)\n    at Object._get [as get] (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\fastify\\fastify.js:262:34)\n    at cellRoutes (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\apps\\api\\src\\routes\\cell.ts:8:13)\n    at Plugin.exec (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\lib\\plugin.js:125:28)\n    at Boot._loadPlugin (C:\\Users\\dacan\\OneDrive\\Desktop\\Geo_a\\geo-lens-eu\\node_modules\\avvio\\boot.js:432:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_DUPLICATED_ROUTE","name":"FastifyError","statusCode":500},"msg":"Method 'GET' already declared for route '/cell/:h3Index'"}
+14:13:05 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 89637 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+{"level":50,"time":1764421990089,"pid":6920,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+15:22:58 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 91405 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+{"level":50,"time":1764426183773,"pid":25096,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+15:23:07 [tsx] change in ./src\index.ts Rerunning...
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error: Transform failed with 1 error:
+C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\apps\api\src\index.ts:72:6: ERROR: The symbol "server" has already been declared
+    at failureErrorWithLog (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\dacan\OneDrive\Desktop\Geo_a\geo-lens-eu\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.19.0
+c15:24:02 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 91405 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":50,"time":1764426247553,"pid":51744,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:10:47 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 94179 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+{"level":50,"time":1764429052288,"pid":36964,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:42:32 [tsx] change in ./src\index.ts Rerunning...
+c[H3CacheV1] Loaded 94480 records.
+[H3CacheV2] Loaded 1910 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+{"level":50,"time":1764430956607,"pid":29384,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:51:12 [tsx] change in ./src\index.ts Rerunning...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":50,"time":1764431475502,"pid":16756,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:52:03 [tsx] change in ./src\index.ts Rerunning...
+c[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+{"level":50,"time":1764431525570,"pid":60348,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+16:56:26 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1357 records.
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+{"level":30,"time":1764431789427,"pid":43276,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+{"level":30,"time":1764431836740,"pid":43276,"hostname":"DacPC","reqId":"req-1","req":{"method":"GET","url":"/api/h3/tile?x=120&y=85&z=8","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":53768},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 19.697ms
+[TileOrchestrator] Request for 6 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.244ms
+TileOrchestrator:Total: 20.738ms
+[TileOrchestrator] Cache hit 100% (6 cells) in 21ms
+{"level":30,"time":1764431836770,"pid":43276,"hostname":"DacPC","reqId":"req-1","res":{"statusCode":200},"responseTime":29.83240008354187,"msg":"request completed"}
+{"level":30,"time":1764431845640,"pid":43276,"hostname":"DacPC","reqId":"req-2","req":{"method":"GET","url":"/api/h3/tile?x=100&y=80&z=8","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":53770},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 4.731ms
+[TileOrchestrator] Request for 5 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.144ms
+[TileOrchestrator] Computing 5 new cells...
+[DemAdapter] Ensuring coverage for {
+  minLon: -39.375,
+  minLat: 54.97761367069626,
+  maxLon: -37.96875,
+  maxLat: 55.77657301866769,
+  resolution: 4
+}
+[ElsusAdapter] Checking ELSUS coverage...
+[Eshm20Adapter] Checking ESHM20 coverage...
+[ClcAdapter] Checking CLC coverage...
+TileOrchestrator:EnsureCoverage: 0.636ms
+TileOrchestrator:SampleFeatures: 3.855ms
+[RISK DEBUG] Cell 841b54dffffffff:
+  Features: elevation=0.0m, slope=43.5┬░, elsus=1, clc=42
+  Scores: water=1.000, landslide=0.580, seismic=0.183, mineral=0.100
+[RISK DEBUG] Cell 841b727ffffffff:
+  Features: elevation=0.0m, slope=21.1┬░, elsus=N/A, clc=9
+  Scores: water=1.000, landslide=0.282, seismic=0.237, mineral=0.100
+[RISK DEBUG] Cell 841b549ffffffff:
+  Features: elevation=0.0m, slope=13.5┬░, elsus=N/A, clc=12
+  Scores: water=0.673, landslide=0.179, seismic=0.020, mineral=0.100
+[RISK DEBUG] Cell 841b723ffffffff:
+  Features: elevation=0.0m, slope=21.7┬░, elsus=N/A, clc=29
+  Scores: water=1.000, landslide=0.289, seismic=0.266, mineral=0.100
+[RISK DEBUG] Cell 841b735ffffffff:
+  Features: elevation=0.0m, slope=27.8┬░, elsus=1, clc=9
+  Scores: water=1.000, landslide=0.371, seismic=0.190, mineral=0.100
+TileOrchestrator:ComputeScores: 3.827ms
+TileOrchestrator:Total: 13.982ms
+[TileOrchestrator] Completed in 14ms
+{"level":30,"time":1764431845656,"pid":43276,"hostname":"DacPC","reqId":"req-2","res":{"statusCode":200},"responseTime":15.834399938583374,"msg":"request completed"}
+[H3CacheV1] Saved 1362 records.
+{"level":30,"time":1764431851500,"pid":43276,"hostname":"DacPC","reqId":"req-3","req":{"method":"GET","url":"/api/h3/tile?x=100&y=80&z=8","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":53772},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 4.662ms
+[TileOrchestrator] Request for 5 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.037ms
+TileOrchestrator:Total: 5.04ms
+[TileOrchestrator] Cache hit 100% (5 cells) in 5ms
+{"level":30,"time":1764431851506,"pid":43276,"hostname":"DacPC","reqId":"req-3","res":{"statusCode":200},"responseTime":6.141600131988525,"msg":"request completed"}
+{"level":30,"time":1764431859570,"pid":43276,"hostname":"DacPC","reqId":"req-4","req":{"method":"GET","url":"/api/h3/tile?x=100&y=80&z=8","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":53775},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 2.024ms
+[TileOrchestrator] Request for 5 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.031ms
+TileOrchestrator:Total: 2.325ms
+[TileOrchestrator] Cache hit 100% (5 cells) in 3ms
+{"level":30,"time":1764431859573,"pid":43276,"hostname":"DacPC","reqId":"req-4","res":{"statusCode":200},"responseTime":3.2400999069213867,"msg":"request completed"}

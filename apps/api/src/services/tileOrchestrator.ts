@@ -79,6 +79,15 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
 
     // 5. Compute Scores & Update Cache
     console.time('TileOrchestrator:ComputeScores');
+
+    // Sample 10 random cells for debug logging
+    const debugSampleSize = Math.min(10, missingIndices.length);
+    const debugIndices = new Set<string>();
+    while (debugIndices.size < debugSampleSize) {
+        const randomIdx = Math.floor(Math.random() * missingIndices.length);
+        debugIndices.add(missingIndices[randomIdx]);
+    }
+
     const newRecords: H3CacheRecord[] = missingIndices.map(h3Index => {
         const dem = demData[h3Index] || {};
         const elsus = elsusData[h3Index] || {};
@@ -99,11 +108,22 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
         const seismicScore = computeSeismicScore(features);
         const mineralScore = computeMineralScore(features);
 
+        // DEBUG LOGGING for sampled cells
+        if (debugIndices.has(h3Index)) {
+            console.log(`[RISK DEBUG] Cell ${h3Index}:`);
+            console.log(`  Features: elevation=${features.elevation?.toFixed(1) || 'N/A'}m, slope=${features.slope?.toFixed(1) || 'N/A'}°, elsus=${features.elsusClass || 'N/A'}, clc=${features.clcClass || 'N/A'}`);
+            console.log(`  Scores: water=${waterScore.toFixed(3)}, landslide=${landslideScore.toFixed(3)}, seismic=${seismicScore.toFixed(3)}, mineral=${mineralScore.toFixed(3)}`);
+        }
+
         const record: H3CacheRecord = {
             h3Index,
             updatedAt: new Date().toISOString(),
             sourceHash: 'v1', // Placeholder
-            water: { stress: 0.5, recharge: 0.5, score: waterScore },
+            water: {
+                stress: waterScore,           // Water stress = drainage difficulty (0-1)
+                recharge: 1 - waterScore,     // Recharge potential = inverse of stress
+                score: waterScore
+            },
             landslide: { susceptibility: landslideScore, history: false, score: landslideScore },
             seismic: { pga: features.hazardPGA || 0, class: (features.hazardPGA || 0) > 0.2 ? 'HIGH' : 'LOW', score: seismicScore },
             mineral: { prospectivity: mineralScore, type: mineralScore > 0.5 ? 'Potential' : 'None', score: mineralScore },

@@ -58,10 +58,10 @@ export class GeminiAIService implements AIService {
         landslideHistory: context.risks.landslide.mean > 0.7 ? 'HIGH' : 'UNKNOWN'
       };
 
-      // Call Gemini (note: this currently expects image buffer, we'll pass null)
+      // Call Gemini
       const result = await analyzeRiskWithContext(
         context.h3Index,
-        null as any, // TODO: handle imagery when available
+        context.imagery?.base64Image || null,
         legacyContext,
         this.apiKey
       );
@@ -84,10 +84,10 @@ export class GeminiAIService implements AIService {
           summary: result.reasoning || 'AI analysis completed.',
           keyFactors,
           confidence: result.confidence || 0.7,
-          visualConfirmation: result.visualConfirmation ? {
-            confirmed: result.visualConfirmation === 'CONFIRMED',
+          visualConfirmation: result.visualConfirmation !== undefined ? {
+            confirmed: result.visualConfirmation,
             details: result.reasoning || '',
-            confidenceBoost: 0.1
+            confidenceBoost: result.visualConfirmation ? 0.1 : 0
           } : undefined,
           recommendations: [
             'Monitor rainfall trends for landslide triggers',
@@ -142,8 +142,8 @@ export class GeminiAIService implements AIService {
 
       // Convert ChatMessage[] to legacy format
       const legacyHistory = history.map(msg => ({
-        role: msg.role,
-        parts: [{ text: msg.content }]
+        role: msg.role === 'assistant' ? 'model' : msg.role as 'user' | 'model',
+        parts: msg.content
       }));
 
       const response = await chatWithMap(

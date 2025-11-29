@@ -1,9 +1,16 @@
 import React from 'react';
-import { MapboxOverlay } from '@deck.gl/mapbox';
 import { H3HexagonLayer, TileLayer } from '@deck.gl/geo-layers';
-import { useControl } from 'react-map-gl/maplibre';
-import { CellScore } from '@geo-lens/geocube';
 import { scaleLinear } from 'd3-scale';
+
+// Compact cell format from optimized endpoint
+type CompactCell = {
+    i: string;   // h3Index
+    w: number;   // water score
+    l: number;   // landslide score
+    s: number;   // seismic score
+    m: number;   // mineral score
+    e?: number;  // elevation (optional)
+};
 
 type Props = {
     // data prop is removed as TileLayer handles fetching
@@ -31,85 +38,86 @@ const hexToRgb = (hex: string): [number, number, number] => {
     ] : [0, 0, 0];
 };
 
-export default function MapOverlay({ selectedLayer, onHover, onClick }: Props) {
-    const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay({
-        interleaved: true,
-        layers: []
-    }));
+export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
+    return [
+        new TileLayer({
+            id: 'h3-tile-layer',
+            pickable: true,
+            autoHighlight: true,
+            // Fetch data from backend endpoint (using working /api/h3/tile endpoint)
+            getTileData: async (tile: any) => {
+                const { x, y, z } = tile.index;
+                const res = await fetch(`http://localhost:3001/api/h3/tile?x=${x}&y=${y}&z=${z}`);
+                if (!res.ok) return [];
+                const data = await res.json();
+                // Transform to compact format client-side
+                return data.map((cell: any) => ({
+                    i: cell.h3Index,
+                    w: cell.water.score,
+                    l: cell.landslide.score,
+                    s: cell.seismic.score,
+                    m: cell.mineral.score,
+                    e: cell.metadata?.elevation
+                }));
+            },
+            // Render H3HexagonLayer for each tile
+            renderSubLayers: (props) => {
+                const { tile } = props;
+                const { data } = props;
+                // @ts-ignore
+                const { x, y, z } = tile.index;
 
-    // Update layers when props change
-    overlay.setProps({
-        layers: [
-            new TileLayer({
-                id: 'h3-tile-layer',
-                // Fetch data from our new backend endpoint
-                getTileData: async (tile: any) => {
-                    const { x, y, z } = tile.index;
-                    const res = await fetch(`http://localhost:3001/api/h3/tile?x=${x}&y=${y}&z=${z}`);
-                    if (!res.ok) return [];
-                    return res.json();
-                },
-                // Render H3HexagonLayer for each tile
-                renderSubLayers: (props) => {
-                    const { tile } = props;
-                    const { data } = props;
-                    // @ts-ignore
-                    const { x, y, z } = tile.index;
+                return new H3HexagonLayer<CompactCell>({
+                    id: `${props.id}-${x}-${y}-${z}`,
+                    data,
+                    pickable: true,
+                    autoHighlight: true,
+                    highlightColor: [255, 255, 255, 100],
+                    wireframe: false,
+                    filled: true,
+                    extruded: true,
+                    getHexagon: (d) => d.i,
+                    getFillColor: (d) => {
+                        let score = 0;
+                        let layerKey = selectedLayer;
 
-                    return new H3HexagonLayer<CellScore>({
-                        id: `${props.id}-${x}-${y}-${z}`,
-                        data,
-                        pickable: true,
-                        wireframe: false,
-                        filled: true,
-                        extruded: true,
-                        getHexagon: (d) => d.h3Index,
-                        getFillColor: (d) => {
-                            let score = 0;
-                            let layerKey = selectedLayer;
+                        if (selectedLayer === 'satellite') {
+                            layerKey = 'water';
+                        }
 
-                            if (selectedLayer === 'satellite') {
-                                layerKey = 'water';
-                            }
+                        switch (layerKey) {
+                            case 'water': score = d.w; break;
+                            case 'mineral': score = d.m; break;
+                            case 'landslide': score = d.l; break;
+                            case 'seismic': score = d.s; break;
+                        }
 
-                            switch (layerKey) {
-                                case 'water': score = d.water.score; break;
-                                case 'mineral': score = d.mineral.score; break;
-                                case 'landslide': score = d.landslide.score; break;
-                                case 'seismic': score = d.seismic.score; break;
-                            }
-
-                            // @ts-ignore
-                            const colorHex = COLOR_SCALES[layerKey](score);
-                            const alpha = selectedLayer === 'satellite' ? 50 : 200;
-                            return [...hexToRgb(colorHex), alpha];
-                        },
-                        getElevation: (d) => {
-                            const layerKey = selectedLayer === 'satellite' ? 'water' : selectedLayer;
-                            switch (layerKey) {
-                                case 'water': return d.water.score * 5000;
-                                case 'mineral': return d.mineral.score * 5000;
-                                case 'landslide': return d.landslide.score * 5000;
-                                case 'seismic': return d.seismic.score * 5000;
-                                default: return 0;
-                            }
-                        },
-                        elevationScale: 1,
-                        onHover,
-                        onClick
-                    });
-                },
-                // Optimization settings
-                minZoom: 0,
-                maxZoom: 19,
-                tileSize: 256,
-                maxRequests: 20, // Limit concurrent requests
-                refinementStrategy: 'no-overlap', // Prevent Z-fighting between levels
-                // Keep tiles visible while loading new ones
-                keepVisble: true
-            })
-        ]
-    });
-
-    return null;
+                        // @ts-ignore
+                        const colorHex = COLOR_SCALES[layerKey](score);
+                        const alpha = selectedLayer === 'satellite' ? 50 : 200;
+                        return [...hexToRgb(colorHex), alpha];
+                    },
+                    getElevation: (d) => {
+                        const layerKey = selectedLayer === 'satellite' ? 'water' : selectedLayer;
+                        switch (layerKey) {
+                            case 'water': return d.w * 5000;
+                            case 'mineral': return d.m * 5000;
+                            case 'landslide': return d.l * 5000;
+                            case 'seismic': return d.s * 5000;
+                            default: return 0;
+                        }
+                    },
+                    elevationScale: 1,
+                });
+            },
+            // Optimization settings
+            minZoom: 0,
+            maxZoom: 19,
+            tileSize: 256,
+            maxRequests: 20, // Limit concurrent requests
+            refinementStrategy: 'no-overlap', // Prevent Z-fighting between levels
+            // Keep tiles visible while loading new ones
+            keepVisble: true
+        })
+    ];
 }

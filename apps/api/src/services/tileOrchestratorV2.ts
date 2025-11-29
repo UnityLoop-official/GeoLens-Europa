@@ -19,7 +19,7 @@ import { DemAdapter } from './datasets/demAdapter';
 import { ElsusAdapter } from './datasets/elsusAdapter';
 import { Eshm20Adapter } from './datasets/eshm20Adapter';
 import { ClcAdapter } from './datasets/clcAdapter';
-import { h3Cache } from './h3Cache';
+import { h3CacheV2, H3CacheRecordV2 } from './h3Cache';
 import { getCellsForBbox } from '@geo-lens/core-geo';
 import { CellFeatures } from '@geo-lens/geocube';
 import {
@@ -158,11 +158,28 @@ export async function getH3RisksForAreaV2(
   const results: H3CellRiskRecord[] = [];
   const missingIndices: string[] = [];
 
-  // NOTE: For now, cache is disabled for V2 because we're returning RiskDistribution
-  // which is not compatible with old H3CacheRecord format.
-  // Future: implement RiskDistribution-aware cache
-  h3Indices.forEach(index => {
-    missingIndices.push(index);
+  // Check cache
+  const cachedRecords = h3CacheV2.getMulti(h3Indices);
+
+  cachedRecords.forEach((record: H3CacheRecordV2 | undefined, i: number) => {
+    const h3Index = h3Indices[i];
+    if (record && record.timestamp === timestamp) {
+      // Cache hit
+      metrics.cacheHits++;
+      results.push({
+        h3Index: record.h3Index,
+        timestamp: record.timestamp,
+        features: record.features,
+        risks: record.risks,
+        metadata: {
+          dataSource: 'adapters', // Cached from adapters/datacube
+          cacheHit: true,
+          computeTimeMs: 0
+        }
+      });
+    } else {
+      missingIndices.push(h3Index);
+    }
   });
 
   metrics.timings.cacheLookup = Date.now() - t2;
@@ -227,6 +244,16 @@ export async function getH3RisksForAreaV2(
           computeTimeMs: Date.now() - cellStartTime
         }
       };
+
+      // Save to cache
+      h3CacheV2.set(h3Index, {
+        h3Index,
+        timestamp,
+        features,
+        risks,
+        updatedAt: new Date().toISOString(),
+        sourceHash: 'v2' // Simple versioning
+      });
 
       chunkResults.push(record);
     }

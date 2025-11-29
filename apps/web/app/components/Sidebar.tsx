@@ -39,13 +39,13 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
 
             <div className="p-5 space-y-6">
                 {/* Water Axis */}
-                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="Modeled Data">
+                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="Risk Engine (Terrain Proxy)">
                     <Metric label="Stress Index" value={cell.water.stress} />
                     <Metric label="Recharge Potential" value={cell.water.recharge} />
                 </Card>
 
                 {/* Landslide Axis */}
-                <Card title="Mass Movement" icon="🏔️" color="amber" score={cell.landslide.score} source="Modeled (ELSUS Unavailable)">
+                <Card title="Mass Movement" icon="🏔️" color="amber" score={cell.landslide.score} source="Risk Engine (DEM + ELSUS)">
                     <Metric label="Susceptibility" value={cell.landslide.susceptibility} />
                     <div className="flex justify-between text-sm py-2 border-b border-slate-50 last:border-0">
                         <span className="text-slate-500 font-medium">History</span>
@@ -64,14 +64,15 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                     </div>
                 </Card>
 
-                {/* Mineral Axis */}
-                <Card title="Resources" icon="💎" color="purple" score={cell.mineral.score} source="Modeled Data">
+                {/* Mineral Axis - HIDDEN FOR RISK ENGINE V1 (focused on water/flood and landslide only) */}
+                {/* TODO: Re-enable when mineral prospectivity model is validated */}
+                {/* <Card title="Resources" icon="💎" color="purple" score={cell.mineral.score} source="Modeled Data">
                     <Metric label="Prospectivity" value={cell.mineral.prospectivity} />
                     <div className="flex justify-between text-sm py-2 border-b border-slate-50 last:border-0">
                         <span className="text-slate-500 font-medium">Type</span>
                         <span className="font-bold text-slate-800">{cell.mineral.type}</span>
                     </div>
-                </Card>
+                </Card> */}
 
                 {/* Metadata */}
                 <div className="grid grid-cols-2 gap-3">

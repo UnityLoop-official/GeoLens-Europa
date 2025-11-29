@@ -84,6 +84,7 @@ interface CompactRiskResponse {
   /** Metadata */
   metadata: {
     dataSource: 'datacube' | 'adapters';
+    cacheHit: boolean;
     computeTimeMs: number;
   };
 }
@@ -280,6 +281,7 @@ function toCompactFormat(record: H3CellRiskRecord): CompactRiskResponse {
     },
     metadata: {
       dataSource: record.metadata.dataSource,
+      cacheHit: record.metadata.cacheHit,
       computeTimeMs: record.metadata.computeTimeMs
     }
   };

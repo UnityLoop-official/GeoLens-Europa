@@ -76,8 +76,9 @@ The project is structured as a monorepo using `npm workspaces` to ensure modular
 
 - **Framework**: Next.js 14 (App Router, TypeScript).
 - **2D Mapping**:
-  - `react-map-gl` + `maplibre-gl` for base maps and vector tiles.
-  - Deck.gl layers for H3 grids, choropleths and density maps.
+  - **Deck.gl** as the primary map controller (Parent Component) for robust event handling.
+  - **MapLibre** synchronized as a background layer for base maps and vector tiles.
+  - **H3 Hexagon Layers** for high-performance data visualization.
 - **2.5D Terrain & Profiles**:
   - Terrain overlays using DEM-derived heightmaps.
   - Interactive elevation profiles along user-drawn transects (planned).

@@ -66,7 +66,7 @@ export type {
 // ============================================================================
 // BACKENDS
 // ============================================================================
-export { MemoryDataCube } from './backends/memory';
+export { PostgresBackend } from './backends/postgres';
 
 // ============================================================================
 // FACTORY FUNCTION
@@ -74,6 +74,7 @@ export { MemoryDataCube } from './backends/memory';
 
 import { DataCubeBackend, DataCubeConfig } from './types';
 import { MemoryDataCube } from './backends/memory';
+import { PostgresBackend } from './backends/postgres';
 
 /**
  * Create a DataCube instance with the specified backend
@@ -111,8 +112,9 @@ export async function createDataCube(config: DataCubeConfig): Promise<DataCubeBa
       throw new Error('SQLite backend not yet implemented. Use "memory" for now.');
 
     case 'postgres':
-      // TODO: Implement PostgreSQL backend
-      throw new Error('PostgreSQL backend not yet implemented. Use "memory" for now.');
+      const pgBackend = new PostgresBackend(config);
+      await pgBackend.initialize();
+      return pgBackend;
 
     case 'duckdb':
       // TODO: Implement DuckDB backend
