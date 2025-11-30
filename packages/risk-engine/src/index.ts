@@ -53,8 +53,11 @@ export { computeLandslideRisk } from './landslide';
 /** Compute seismic risk from cell features */
 export { computeSeismicRisk, classifyPGA } from './seismic';
 
-/** Compute water stress risk from cell features (PLACEHOLDER MODEL) */
-export { computeWaterRisk, computeTerrainDrainageProxy } from './water';
+/** Compute water stress risk from cell features (PRODUCTION MODEL with real precipitation) */
+export { computeWaterRisk, computeWaterScore } from './waterProduction';
+
+/** Legacy terrain drainage proxy (PLACEHOLDER MODEL) */
+export { computeWaterRisk as computeWaterRiskLegacy, computeTerrainDrainageProxy } from './water';
 
 /** Compute mineral prospectivity from cell features (PLACEHOLDER MODEL) */
 export { computeMineralRisk, computeTargetedMineralProspectivity, detectExistingMineralSites } from './mineral';
@@ -78,7 +81,7 @@ export {
 import { CellFeatures, RiskResult, RiskConfig, DEFAULT_RISK_CONFIG } from './types';
 import { computeLandslideRisk } from './landslide';
 import { computeSeismicRisk } from './seismic';
-import { computeWaterRisk } from './water';
+import { computeWaterRisk } from './waterProduction';
 import { computeMineralRisk } from './mineral';
 
 /**

@@ -1,0 +1,23 @@
+# NASA IMERG Precipitation Microservice Dependencies
+# Python 3.11+
+
+# Web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# NASA data access
+earthaccess>=0.8.0
+
+# Scientific computing
+xarray>=2024.1.0
+numpy>=1.26.0
+netCDF4>=1.6.0
+
+# Geospatial
+h3>=3.7.0
+
+# Data validation
+pydantic>=2.5.0
+
+# Environment variables
+python-dotenv>=1.0.0

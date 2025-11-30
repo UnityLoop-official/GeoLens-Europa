@@ -1,5 +1,8 @@
 import { AreaRequest } from './datasets/types';
-import { createDataAdapters } from './datasets/adapterFactory';
+import { DemAdapter } from './datasets/demAdapter';
+import { ElsusAdapter } from './datasets/elsusAdapter';
+import { Eshm20Adapter } from './datasets/eshm20Adapter';
+import { ClcAdapter } from './datasets/clcAdapter';
 import { h3Cache, H3CacheRecord } from './h3Cache';
 import { getCellsForBbox } from '@geo-lens/core-geo';
 import {
@@ -10,13 +13,10 @@ import {
     computeMineralScore
 } from '@geo-lens/geocube';
 
-// Initialize adapters (automatically selects real or mock based on USE_REAL_DATA env var)
-const adapters = createDataAdapters();
-const demAdapter = adapters.dem;
-const elsusAdapter = adapters.elsus;
-const eshm20Adapter = adapters.eshm20;
-const clcAdapter = adapters.clc;
-const precipitationAdapter = adapters.precipitation; // Optional, only available with real data
+const demAdapter = new DemAdapter();
+const elsusAdapter = new ElsusAdapter();
+const eshm20Adapter = new Eshm20Adapter();
+const clcAdapter = new ClcAdapter();
 
 export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheRecord[]> {
     const startTime = Date.now();
@@ -59,37 +59,22 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
 
     // 3. Ensure Coverage (Parallel)
     console.time('TileOrchestrator:EnsureCoverage');
-    const coveragePromises = [
+    await Promise.all([
         demAdapter.ensureCoverageForArea(area),
         elsusAdapter.ensureCoverageForArea(area),
         eshm20Adapter.ensureCoverageForArea(area),
         clcAdapter.ensureCoverageForArea(area)
-    ];
-
-    // Add precipitation if available (only with real data)
-    if (precipitationAdapter) {
-        coveragePromises.push(precipitationAdapter.ensureCoverageForArea(area));
-    }
-
-    await Promise.all(coveragePromises);
+    ]);
     console.timeEnd('TileOrchestrator:EnsureCoverage');
 
     // 4. Sample Features (Parallel)
     console.time('TileOrchestrator:SampleFeatures');
-    const featurePromises = [
+    const [demData, elsusData, eshmData, clcData] = await Promise.all([
         demAdapter.sampleFeaturesForH3Cells(area, missingIndices),
         elsusAdapter.sampleFeaturesForH3Cells(area, missingIndices),
         eshm20Adapter.sampleFeaturesForH3Cells(area, missingIndices),
         clcAdapter.sampleFeaturesForH3Cells(area, missingIndices)
-    ];
-
-    // Add precipitation if available
-    if (precipitationAdapter) {
-        featurePromises.push(precipitationAdapter.sampleFeaturesForH3Cells(area, missingIndices));
-    }
-
-    const featureResults = await Promise.all(featurePromises);
-    const [demData, elsusData, eshmData, clcData, precipData] = featureResults;
+    ]);
     console.timeEnd('TileOrchestrator:SampleFeatures');
 
     // 5. Compute Scores & Update Cache
@@ -108,7 +93,6 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
         const elsus = elsusData[h3Index] || {};
         const eshm = eshmData[h3Index] || {};
         const clc = clcData[h3Index] || {};
-        const precip = precipData?.[h3Index] || {};
 
         const features: CellFeatures = {
             h3Index,
@@ -116,10 +100,7 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
             slope: dem.slope,
             elsusClass: elsus.elsusClass,
             hazardPGA: eshm.hazardPGA,
-            clcClass: clc.clcClass,
-            // Add precipitation data if available
-            rain24h: precip.rain24h,
-            rain72h: precip.rain72h
+            clcClass: clc.clcClass
         };
 
         const waterScore = computeWaterScore(features);
@@ -131,20 +112,13 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
         if (debugIndices.has(h3Index)) {
             console.log(`[RISK DEBUG] Cell ${h3Index}:`);
             console.log(`  Features: elevation=${features.elevation?.toFixed(1) || 'N/A'}m, slope=${features.slope?.toFixed(1) || 'N/A'}°, elsus=${features.elsusClass || 'N/A'}, clc=${features.clcClass || 'N/A'}`);
-            if (features.rain24h !== undefined && features.rain24h !== null) {
-                const rain24hStr = typeof features.rain24h === 'number' ? features.rain24h.toFixed(1) : String(features.rain24h);
-                const rain72hStr = (features.rain72h !== undefined && features.rain72h !== null && typeof features.rain72h === 'number')
-                    ? features.rain72h.toFixed(1)
-                    : 'N/A';
-                console.log(`  Precipitation: rain24h=${rain24hStr}mm, rain72h=${rain72hStr}mm`);
-            }
             console.log(`  Scores: water=${waterScore.toFixed(3)}, landslide=${landslideScore.toFixed(3)}, seismic=${seismicScore.toFixed(3)}, mineral=${mineralScore.toFixed(3)}`);
         }
 
         const record: H3CacheRecord = {
             h3Index,
             updatedAt: new Date().toISOString(),
-            sourceHash: precipitationAdapter ? 'v2-real-data' : 'v1-mock-data',
+            sourceHash: 'v1', // Placeholder
             water: {
                 stress: waterScore,           // Water stress = drainage difficulty (0-1)
                 recharge: 1 - waterScore,     // Recharge potential = inverse of stress

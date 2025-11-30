@@ -17,9 +17,11 @@
         "@geo-lens/geocube": "^0.2.0",
         "@geo-lens/risk-engine": "^0.2.0",
         "@types/pg": "^8.15.6",
+        "axios": "^1.13.2",
         "dotenv": "^17.2.3",
         "fastify": "^4.24.3",
         "fastify-plugin": "^4.5.1",
+        "geotiff": "^2.1.4-beta.1",
         "pg": "^8.16.3"
     },
     "devDependencies": {
