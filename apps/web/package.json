@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run copy-cesium && next build",
     "start": "next start",
     "lint": "next lint",
     "copy-cesium": "shx rm -rf public/cesium && shx cp -r ../../node_modules/cesium/Build/Cesium public/cesium"
