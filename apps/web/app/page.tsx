@@ -8,7 +8,7 @@ const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 
 export default function Home() {
   const [mode, setMode] = useState<'2D' | '3D'>('2D');
-  const [selectedLayer, setSelectedLayer] = useState<'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite'>('water');
+  const [selectedLayer, setSelectedLayer] = useState<'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation'>('water');
 
   return (
     <main className="flex min-h-screen flex-col">

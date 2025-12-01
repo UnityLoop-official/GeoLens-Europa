@@ -9,12 +9,13 @@ type CompactCell = {
     l: number;   // landslide score
     s: number;   // seismic score
     m: number;   // mineral score
+    p?: number;  // precipitation (mm)
     e?: number;  // elevation (optional)
 };
 
 type Props = {
     // data prop is removed as TileLayer handles fetching
-    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite';
+    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation';
     onHover: (info: any) => void;
     onClick: (info: any) => void;
 };
@@ -25,7 +26,8 @@ const COLOR_SCALES = {
     mineral: scaleLinear<string>().domain([0, 1]).range(['#FFF8E1', '#FF6F00']), // Amber/Orange
     landslide: scaleLinear<string>().domain([0, 1]).range(['#EFEBE9', '#3E2723']), // Brown
     seismic: scaleLinear<string>().domain([0, 1]).range(['#FFEBEE', '#B71C1C']),  // Red
-    satellite: scaleLinear<string>().domain([0, 1]).range(['#E3F2FD', '#0D47A1']) // Fallback to blue for satellite
+    satellite: scaleLinear<string>().domain([0, 1]).range(['#E3F2FD', '#0D47A1']), // Fallback to blue for satellite
+    precipitation: scaleLinear<string>().domain([0, 50]).range(['#E0F7FA', '#01579B']) // Cyan to Deep Blue (0-50mm)
 };
 
 // Helper to parse hex color to [r, g, b]
@@ -57,6 +59,7 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                     l: cell.landslide.score,
                     s: cell.seismic.score,
                     m: cell.mineral.score,
+                    p: cell.water.rain24h || 0, // Map rain24h to p
                     e: cell.metadata?.elevation
                 }));
             },
@@ -89,6 +92,7 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                             case 'mineral': score = d.m; break;
                             case 'landslide': score = d.l; break;
                             case 'seismic': score = d.s; break;
+                            case 'precipitation': return d.p && d.p > 0 ? 2 : 0; // Only border if rain > 0
                         }
                         // Dynamic Border Width: Thicker for higher risk
                         // Range: 2px (Low Risk) to 6px (High Risk)
@@ -109,6 +113,13 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                             case 'mineral': score = d.m; break;
                             case 'landslide': score = d.l; break;
                             case 'seismic': score = d.s; break;
+                            case 'precipitation':
+                                // Special handling for precipitation
+                                // @ts-ignore
+                                const colorHex = COLOR_SCALES.precipitation(d.p || 0);
+                                // If 0 rain, make it very transparent
+                                const alpha = (d.p || 0) > 0 ? 150 : 20;
+                                return [...hexToRgb(colorHex), alpha];
                         }
 
                         // @ts-ignore
@@ -130,6 +141,10 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                             case 'mineral': score = d.m; break;
                             case 'landslide': score = d.l; break;
                             case 'seismic': score = d.s; break;
+                            case 'precipitation':
+                                // @ts-ignore
+                                const colorHex = COLOR_SCALES.precipitation(d.p || 0);
+                                return [...hexToRgb(colorHex), 255];
                         }
 
                         // @ts-ignore
@@ -144,6 +159,7 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                             case 'mineral': return d.m * 5000;
                             case 'landslide': return d.l * 5000;
                             case 'seismic': return d.s * 5000;
+                            case 'precipitation': return (d.p || 0) * 100; // 1mm = 100m elevation
                             default: return 0;
                         }
                     },

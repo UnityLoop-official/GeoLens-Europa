@@ -8,10 +8,14 @@ type Props = {
     onClose: () => void;
     onAnalyze: () => void;
     loading: boolean;
+    onAnalyze: () => void;
+    loading: boolean;
     analysis: any;
+    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation';
+    onLayerChange: (layer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation') => void;
 };
 
-export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }: Props) {
+export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis, selectedLayer, onLayerChange }: Props) {
     if (!cell) return null;
 
     return (
@@ -28,6 +32,22 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                         </span>
                         <span className="text-xs font-mono text-slate-600 font-medium">{cell.h3Index}</span>
                     </div>
+
+                    {/* Layer Selector */}
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                        {(['water', 'landslide', 'seismic', 'precipitation'] as const).map(layer => (
+                            <button
+                                key={layer}
+                                onClick={() => onLayerChange(layer)}
+                                className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide transition-all border ${selectedLayer === layer
+                                        ? 'bg-slate-800 text-white border-slate-800 shadow-md'
+                                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                    }`}
+                            >
+                                {layer === 'precipitation' ? 'Rain' : layer}
+                            </button>
+                        ))}
+                    </div>
                 </div>
                 <button
                     onClick={onClose}
@@ -39,7 +59,7 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
 
             <div className="p-5 space-y-6">
                 {/* Water Axis */}
-                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="Risk Engine (Terrain Proxy)">
+                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="NASA GPM & Risk Engine">
                     <Metric label="Stress Index" value={cell.water.stress} />
                     <Metric label="Recharge Potential" value={cell.water.recharge} />
                     {cell.water.rain24h !== undefined && (

@@ -19,12 +19,13 @@ type CompactCell = {
     l: number;   // landslide score
     s: number;   // seismic score
     m: number;   // mineral score
+    p?: number;  // precipitation (mm)
     e?: number;  // elevation (optional)
 };
 
 interface Props {
-    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite';
-    onLayerChange: (layer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite') => void;
+    selectedLayer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation';
+    onLayerChange: (layer: 'water' | 'mineral' | 'landslide' | 'seismic' | 'satellite' | 'precipitation') => void;
 }
 
 export default function MapView({ selectedLayer, onLayerChange }: Props) {
@@ -96,6 +97,11 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
             metadata: { lat: 0, lon: 0, elevation: compactCell.e || 0, biome: 'Unknown' }
         };
 
+        // Add precipitation if available
+        if (compactCell.p !== undefined) {
+            mockCell.water.rain24h = compactCell.p;
+        }
+
         setSelectedCell(mockCell); // Instant optimistic update
         setAnalysis(null);
 
@@ -145,6 +151,19 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                     <span>🛰️</span> Satellite
                 </button>
                 <div className="w-px bg-slate-200 mx-1 my-1" />
+
+                {/* Precipitation Layer */}
+                <button
+                    onClick={() => onLayerChange('precipitation')}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${selectedLayer === 'precipitation'
+                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
+                        : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                >
+                    <span>🌧️</span> Rain
+                </button>
+                <div className="w-px bg-slate-200 mx-1 my-1" />
+
                 {/* Risk Engine V1: Only water, landslide, seismic (mineral hidden) */}
                 {(['water', 'landslide', 'seismic'] as const).map(layer => (
                     <button
@@ -172,12 +191,13 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                             background: selectedLayer === 'water' ? 'linear-gradient(to right, #E3F2FD, #0D47A1)' :
                                 selectedLayer === 'landslide' ? 'linear-gradient(to right, #EFEBE9, #3E2723)' :
                                     selectedLayer === 'seismic' ? 'linear-gradient(to right, #FFEBEE, #B71C1C)' :
-                                        selectedLayer === 'mineral' ? 'linear-gradient(to right, #FFF8E1, #FF6F00)' : ''
+                                        selectedLayer === 'mineral' ? 'linear-gradient(to right, #FFF8E1, #FF6F00)' :
+                                            selectedLayer === 'precipitation' ? 'linear-gradient(to right, #E0F7FA, #01579B)' : ''
                         }}
                     />
                     <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                        <span>Low</span>
-                        <span>High</span>
+                        <span>{selectedLayer === 'precipitation' ? '0 mm' : 'Low'}</span>
+                        <span>{selectedLayer === 'precipitation' ? '> 50 mm' : 'High'}</span>
                     </div>
                 </div>
             )}
@@ -233,11 +253,15 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                             ? 'N/A'
                             : (() => {
                                 const obj = hoverInfo.object as CompactCell;
+
+                                if (selectedLayer === 'precipitation') {
+                                    return `${(obj.p || 0).toFixed(1)} mm`;
+                                }
                                 const scoreMap = { water: obj.w, mineral: obj.m, landslide: obj.l, seismic: obj.s };
-                                return (scoreMap[selectedLayer] * 100).toFixed(0);
+                                return (scoreMap[selectedLayer as keyof typeof scoreMap] * 100).toFixed(0);
                             })()
                         }
-                        {selectedLayer !== 'satellite' && <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>}
+                        {selectedLayer !== 'satellite' && selectedLayer !== 'precipitation' && <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>}
                     </div>
                 </div>
             )}
