@@ -30,7 +30,7 @@ import earthaccess
 import xarray as xr
 import numpy as np
 
-from config import (
+from .config import (
     EARTHDATA_USERNAME,
     EARTHDATA_PASSWORD,
     IMERG_PRODUCT_LATE,

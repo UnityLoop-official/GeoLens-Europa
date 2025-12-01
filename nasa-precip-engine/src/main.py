@@ -25,15 +25,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
 
-from config import (
+from .config import (
     API_HOST,
     API_PORT,
     MAX_H3_CELLS_PER_REQUEST,
     LOG_LEVEL,
 )
-from imerg_client import load_imerg_cube
-from h3_mapping import sample_precip_for_h3, validate_h3_indices
-from cache import get_cached_cube, set_cached_cube, get_cache_stats
+from .imerg_client import load_imerg_cube
+from .h3_mapping import sample_precip_for_h3, validate_h3_indices
+from .cache import get_cached_cube, set_cached_cube, get_cache_stats
 
 # Configure logging
 logging.basicConfig(

@@ -1,4 +1,21 @@
 /**
+ * ⚠️ DEPRECATED - DO NOT USE ⚠️
+ *
+ * This file is DEPRECATED and contains MOCK DATA.
+ *
+ * The parseASCIIGrid() method (lines 198-210) returns a grid filled with ZEROS,
+ * which caused all precipitation values to be 0.
+ *
+ * REPLACED BY: NASA Precipitation Microservice (nasa-precip-engine)
+ * - Python FastAPI service using earthaccess + xarray
+ * - Real NASA GPM IMERG data via OPeNDAP
+ * - See: nasa-precip-engine/ directory
+ * - Integration: apps/api/src/services/precip/nasaPrecipProvider.ts
+ *
+ * This file is kept for reference only and should NOT be used in production.
+ *
+ * --- ORIGINAL HEADER (for reference) ---
+ *
  * GPM IMERG Provider - Real-time precipitation data from NASA
  *
  * Data Source: GPM (Global Precipitation Measurement) IMERG

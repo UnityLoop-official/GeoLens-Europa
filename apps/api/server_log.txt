@@ -369,3 +369,228 @@ TileOrchestrator:CacheLookup: 0.031ms
 TileOrchestrator:Total: 2.325ms
 [TileOrchestrator] Cache hit 100% (5 cells) in 3ms
 {"level":30,"time":1764431859573,"pid":43276,"hostname":"DacPC","reqId":"req-4","res":{"statusCode":200},"responseTime":3.2400999069213867,"msg":"request completed"}
+{"level":30,"time":1764461410007,"pid":43276,"hostname":"DacPC","reqId":"req-5","req":{"method":"GET","url":"/api/h3/tile?x=65&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62542},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 5.292ms
+[TileOrchestrator] Request for 30 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.085ms
+TileOrchestrator:Total: 5.875ms
+[TileOrchestrator] Cache hit 100% (30 cells) in 6ms
+TileOrchestrator:GenerateCells: 5.776ms
+[TileOrchestrator] Request for 31 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.082ms
+TileOrchestrator:Total: 6.409ms
+[TileOrchestrator] Cache hit 100% (31 cells) in 7ms
+TileOrchestrator:GenerateCells: 6.621ms
+[TileOrchestrator] Request for 29 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.072ms
+TileOrchestrator:Total: 7.041ms
+[TileOrchestrator] Cache hit 100% (29 cells) in 8ms
+TileOrchestrator:GenerateCells: 10.23ms
+[TileOrchestrator] Request for 30 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.074ms
+TileOrchestrator:Total: 10.888ms
+[TileOrchestrator] Cache hit 100% (30 cells) in 11ms
+TileOrchestrator:GenerateCells: 5.523ms
+[TileOrchestrator] Request for 29 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.106ms
+TileOrchestrator:Total: 5.99ms
+[TileOrchestrator] Cache hit 100% (29 cells) in 7ms
+TileOrchestrator:GenerateCells: 7.96ms
+[TileOrchestrator] Request for 29 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.072ms
+TileOrchestrator:Total: 9.459ms
+[TileOrchestrator] Cache hit 100% (29 cells) in 10ms
+{"level":30,"time":1764461410035,"pid":43276,"hostname":"DacPC","reqId":"req-6","req":{"method":"GET","url":"/api/h3/tile?x=65&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":54794},"msg":"incoming request"}
+{"level":30,"time":1764461410046,"pid":43276,"hostname":"DacPC","reqId":"req-7","req":{"method":"GET","url":"/api/h3/tile?x=66&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":64259},"msg":"incoming request"}
+{"level":30,"time":1764461410056,"pid":43276,"hostname":"DacPC","reqId":"req-8","req":{"method":"GET","url":"/api/h3/tile?x=66&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":52355},"msg":"incoming request"}
+{"level":30,"time":1764461410071,"pid":43276,"hostname":"DacPC","reqId":"req-9","req":{"method":"GET","url":"/api/h3/tile?x=67&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":55483},"msg":"incoming request"}
+{"level":30,"time":1764461410085,"pid":43276,"hostname":"DacPC","reqId":"req-a","req":{"method":"GET","url":"/api/h3/tile?x=67&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62474},"msg":"incoming request"}
+{"level":30,"time":1764461410113,"pid":43276,"hostname":"DacPC","reqId":"req-5","res":{"statusCode":200},"responseTime":105.75970005989075,"msg":"request completed"}
+TileOrchestrator:GenerateCells: 4.474ms
+[TileOrchestrator] Request for 26 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.056ms
+TileOrchestrator:Total: 4.839ms
+[TileOrchestrator] Cache hit 100% (26 cells) in 5ms
+{"level":30,"time":1764461410120,"pid":43276,"hostname":"DacPC","reqId":"req-6","res":{"statusCode":200},"responseTime":84.84470009803772,"msg":"request completed"}
+{"level":30,"time":1764461410122,"pid":43276,"hostname":"DacPC","reqId":"req-7","res":{"statusCode":200},"responseTime":76.09340000152588,"msg":"request completed"}
+{"level":30,"time":1764461410124,"pid":43276,"hostname":"DacPC","reqId":"req-8","res":{"statusCode":200},"responseTime":67.30219984054565,"msg":"request completed"}
+{"level":30,"time":1764461410130,"pid":43276,"hostname":"DacPC","reqId":"req-9","res":{"statusCode":200},"responseTime":58.238199949264526,"msg":"request completed"}
+{"level":30,"time":1764461410134,"pid":43276,"hostname":"DacPC","reqId":"req-a","res":{"statusCode":200},"responseTime":48.46119999885559,"msg":"request completed"}
+{"level":30,"time":1764461410135,"pid":43276,"hostname":"DacPC","reqId":"req-b","req":{"method":"GET","url":"/api/h3/tile?x=68&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62542},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 5.863ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.06ms
+TileOrchestrator:Total: 6.345ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 7ms
+TileOrchestrator:GenerateCells: 2.865ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.067ms
+TileOrchestrator:Total: 3.607ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 4ms
+TileOrchestrator:GenerateCells: 3.691ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.062ms
+TileOrchestrator:Total: 4.071ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 4ms
+TileOrchestrator:GenerateCells: 4.8ms
+[TileOrchestrator] Request for 26 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.06ms
+TileOrchestrator:Total: 5.207ms
+[TileOrchestrator] Cache hit 100% (26 cells) in 6ms
+TileOrchestrator:GenerateCells: 2.75ms
+[TileOrchestrator] Request for 29 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.083ms
+TileOrchestrator:Total: 3.352ms
+[TileOrchestrator] Cache hit 100% (29 cells) in 3ms
+{"level":30,"time":1764461410144,"pid":43276,"hostname":"DacPC","reqId":"req-c","req":{"method":"GET","url":"/api/h3/tile?x=68&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":54794},"msg":"incoming request"}
+{"level":30,"time":1764461410154,"pid":43276,"hostname":"DacPC","reqId":"req-d","req":{"method":"GET","url":"/api/h3/tile?x=69&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":64259},"msg":"incoming request"}
+{"level":30,"time":1764461410163,"pid":43276,"hostname":"DacPC","reqId":"req-e","req":{"method":"GET","url":"/api/h3/tile?x=69&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":52355},"msg":"incoming request"}
+{"level":30,"time":1764461410172,"pid":43276,"hostname":"DacPC","reqId":"req-f","req":{"method":"GET","url":"/api/h3/tile?x=70&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":55483},"msg":"incoming request"}
+{"level":30,"time":1764461410180,"pid":43276,"hostname":"DacPC","reqId":"req-g","req":{"method":"GET","url":"/api/h3/tile?x=70&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62474},"msg":"incoming request"}
+{"level":30,"time":1764461410186,"pid":43276,"hostname":"DacPC","reqId":"req-b","res":{"statusCode":200},"responseTime":51.33369994163513,"msg":"request completed"}
+{"level":30,"time":1764461410189,"pid":43276,"hostname":"DacPC","reqId":"req-c","res":{"statusCode":200},"responseTime":45.12220001220703,"msg":"request completed"}
+{"level":30,"time":1764461410192,"pid":43276,"hostname":"DacPC","reqId":"req-d","res":{"statusCode":200},"responseTime":38.822099924087524,"msg":"request completed"}
+{"level":30,"time":1764461410194,"pid":43276,"hostname":"DacPC","reqId":"req-e","res":{"statusCode":200},"responseTime":31.504600048065186,"msg":"request completed"}
+{"level":30,"time":1764461410196,"pid":43276,"hostname":"DacPC","reqId":"req-f","res":{"statusCode":200},"responseTime":23.56660008430481,"msg":"request completed"}
+{"level":30,"time":1764461410197,"pid":43276,"hostname":"DacPC","reqId":"req-g","res":{"statusCode":200},"responseTime":17.239500045776367,"msg":"request completed"}
+{"level":30,"time":1764461410203,"pid":43276,"hostname":"DacPC","reqId":"req-h","req":{"method":"GET","url":"/api/h3/tile?x=71&y=46&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62542},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 4.256ms
+[TileOrchestrator] Request for 26 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.062ms
+TileOrchestrator:Total: 5.209ms
+[TileOrchestrator] Cache hit 100% (26 cells) in 6ms
+TileOrchestrator:GenerateCells: 2.905ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.061ms
+TileOrchestrator:Total: 3.368ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 3ms
+{"level":30,"time":1764461410210,"pid":43276,"hostname":"DacPC","reqId":"req-i","req":{"method":"GET","url":"/api/h3/tile?x=71&y=47&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":54794},"msg":"incoming request"}
+TileOrchestrator:GenerateCells: 4.985ms
+[TileOrchestrator] Request for 33 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.073ms
+TileOrchestrator:Total: 5.36ms
+[TileOrchestrator] Cache hit 100% (33 cells) in 6ms
+TileOrchestrator:GenerateCells: 3.271ms
+[TileOrchestrator] Request for 31 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.061ms
+TileOrchestrator:Total: 3.651ms
+[TileOrchestrator] Cache hit 100% (31 cells) in 3ms
+TileOrchestrator:GenerateCells: 2.865ms
+[TileOrchestrator] Request for 30 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.066ms
+TileOrchestrator:Total: 3.547ms
+[TileOrchestrator] Cache hit 100% (30 cells) in 4ms
+TileOrchestrator:GenerateCells: 6.473ms
+[TileOrchestrator] Request for 30 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.066ms
+TileOrchestrator:Total: 6.959ms
+[TileOrchestrator] Cache hit 100% (30 cells) in 7ms
+{"level":30,"time":1764461410217,"pid":43276,"hostname":"DacPC","reqId":"req-j","req":{"method":"GET","url":"/api/h3/tile?x=65&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":64259},"msg":"incoming request"}
+{"level":30,"time":1764461410225,"pid":43276,"hostname":"DacPC","reqId":"req-k","req":{"method":"GET","url":"/api/h3/tile?x=66&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":52355},"msg":"incoming request"}
+{"level":30,"time":1764461410231,"pid":43276,"hostname":"DacPC","reqId":"req-l","req":{"method":"GET","url":"/api/h3/tile?x=67&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":55483},"msg":"incoming request"}
+{"level":30,"time":1764461410238,"pid":43276,"hostname":"DacPC","reqId":"req-m","req":{"method":"GET","url":"/api/h3/tile?x=68&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62474},"msg":"incoming request"}
+{"level":30,"time":1764461410249,"pid":43276,"hostname":"DacPC","reqId":"req-h","res":{"statusCode":200},"responseTime":46.248300075531006,"msg":"request completed"}
+{"level":30,"time":1764461410251,"pid":43276,"hostname":"DacPC","reqId":"req-i","res":{"statusCode":200},"responseTime":40.95050001144409,"msg":"request completed"}
+TileOrchestrator:GenerateCells: 2.444ms
+[TileOrchestrator] Request for 29 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.187ms
+TileOrchestrator:Total: 3.052ms
+[TileOrchestrator] Cache hit 100% (29 cells) in 3ms
+TileOrchestrator:GenerateCells: 2.536ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.062ms
+TileOrchestrator:Total: 2.967ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 3ms
+{"level":30,"time":1764461410256,"pid":43276,"hostname":"DacPC","reqId":"req-j","res":{"statusCode":200},"responseTime":38.45770001411438,"msg":"request completed"}
+{"level":30,"time":1764461410257,"pid":43276,"hostname":"DacPC","reqId":"req-k","res":{"statusCode":200},"responseTime":31.985600233078003,"msg":"request completed"}
+{"level":30,"time":1764461410258,"pid":43276,"hostname":"DacPC","reqId":"req-n","req":{"method":"GET","url":"/api/h3/tile?x=69&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":62542},"msg":"incoming request"}
+{"level":30,"time":1764461410264,"pid":43276,"hostname":"DacPC","reqId":"req-o","req":{"method":"GET","url":"/api/h3/tile?x=70&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":54794},"msg":"incoming request"}
+{"level":30,"time":1764461410270,"pid":43276,"hostname":"DacPC","reqId":"req-l","res":{"statusCode":200},"responseTime":38.77000021934509,"msg":"request completed"}
+TileOrchestrator:GenerateCells: 4.54ms
+[TileOrchestrator] Request for 28 cells (Res: 4)
+TileOrchestrator:CacheLookup: 0.068ms
+TileOrchestrator:Total: 4.957ms
+[TileOrchestrator] Cache hit 100% (28 cells) in 5ms
+{"level":30,"time":1764461410272,"pid":43276,"hostname":"DacPC","reqId":"req-m","res":{"statusCode":200},"responseTime":33.60389995574951,"msg":"request completed"}
+{"level":30,"time":1764461410274,"pid":43276,"hostname":"DacPC","reqId":"req-p","req":{"method":"GET","url":"/api/h3/tile?x=71&y=48&z=7","hostname":"localhost:3001","remoteAddress":"127.0.0.1","remotePort":64259},"msg":"incoming request"}
+{"level":30,"time":1764461410282,"pid":43276,"hostname":"DacPC","reqId":"req-n","res":{"statusCode":200},"responseTime":24.166199922561646,"msg":"request completed"}
+{"level":30,"time":1764461410285,"pid":43276,"hostname":"DacPC","reqId":"req-o","res":{"statusCode":200},"responseTime":20.451599836349487,"msg":"request completed"}
+{"level":30,"time":1764461410287,"pid":43276,"hostname":"DacPC","reqId":"req-p","res":{"statusCode":200},"responseTime":13.335200071334839,"msg":"request completed"}
+01:28:44 [tsx] change in ./..\..\packages\risk-engine\src\index.ts Restarting...
+c[H3CacheV1] Loaded 1362 records.
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+{"level":30,"time":1764462527711,"pid":79384,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+01:29:20 [tsx] change in ./..\..\packages\risk-engine\src\index.ts Restarting...
+c[H3CacheV1] Loaded 1362 records.
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{"level":30,"time":1764462563641,"pid":77956,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+01:49:28 [tsx] unlink in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{"level":30,"time":1764463771583,"pid":63652,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+18:56:13 [tsx] change in ./src\services\tileOrchestrator.ts Restarting...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+{"level":30,"time":1764525377678,"pid":66308,"hostname":"DacPC","msg":"Server listening at http://0.0.0.0:3001"}
+API Server running at http://localhost:3001
+18:57:07 [tsx] change in ./src\services\tileOrchestrator.ts Restarting...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+{"level":50,"time":1764525430610,"pid":64856,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+18:58:50 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+{"level":50,"time":1764525533190,"pid":64900,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+21:31:31 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: Γ£à audit secrets and track compliance: https://dotenvx.com/ops
+{"level":50,"time":1764534694507,"pid":47668,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+21:35:56 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+{"level":50,"time":1764534959635,"pid":58752,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+21:37:00 [tsx] change in ./src\services\datasets\providers\gpmIMERG.ts Rerunning...
+c[H3CacheV1] Loaded 1362 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+{"level":50,"time":1764535023231,"pid":83672,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+00:13:09 [tsx] change in ./..\..\packages\geocube\src\index.ts Rerunning...
+c[H3CacheV1] Loaded 12786 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (3) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+{"level":50,"time":1764544394154,"pid":27688,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+00:13:35 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 12786 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (3) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+{"level":50,"time":1764544418663,"pid":46388,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+00:14:35 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 12786 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (3) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+{"level":50,"time":1764544479280,"pid":72252,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}
+00:27:02 [tsx] change in ./src\services\tileOrchestrator.ts Rerunning...
+c[H3CacheV1] Loaded 12786 records.
+≡ƒöº [AdapterFactory] Using MOCK data generators (for testing/development)
+   Set USE_REAL_DATA=true to enable real satellite data
+[dotenv@17.2.3] injecting env (3) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":50,"time":1764545227474,"pid":59060,"hostname":"DacPC","err":{"type":"Error","message":"listen EADDRINUSE: address already in use 0.0.0.0:3001","stack":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3001\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\n    at listenInCluster (node:net:1997:12)\n    at node:net:2206:7\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"EADDRINUSE","errno":-4091,"syscall":"listen","address":"0.0.0.0","port":3001},"msg":"listen EADDRINUSE: address already in use 0.0.0.0:3001"}

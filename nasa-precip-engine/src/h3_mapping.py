@@ -17,7 +17,7 @@ from typing import Dict, List
 import h3
 import xarray as xr
 
-from imerg_client import get_precip_at_point
+from .imerg_client import get_precip_at_point
 
 logger = logging.getLogger(__name__)
 

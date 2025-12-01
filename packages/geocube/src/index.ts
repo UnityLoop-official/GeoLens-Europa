@@ -26,6 +26,8 @@ export interface CellScore {
         stress: number; // 0-1 (High stress = 1)
         recharge: number; // 0-1 (High recharge = 1)
         score: number; // Aggregate score
+        rain24h?: number; // Precipitation in last 24h (mm)
+        rain72h?: number; // Precipitation in last 72h (mm)
     };
 
     // Mass Movement Axis

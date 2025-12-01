@@ -36,8 +36,13 @@ export class RealElsusAdapter implements DatasetAdapter {
             return { lat, lon, h3Index };
         });
 
-        const geoPoints = points.map(p => ({ lat: p.lat, lon: p.lon }));
-        const geoData = await this.provider.fetchBatch(geoPoints);
+        let geoData = new Map<string, { value: number; source: string }>();
+        try {
+            const geoPoints = points.map(p => ({ lat: p.lat, lon: p.lon }));
+            geoData = await this.provider.fetchBatch(geoPoints);
+        } catch (error) {
+            console.error('[RealElsusAdapter] Failed to fetch ELSUS data:', error);
+        }
 
         for (const point of points) {
             const key = `${point.lat}_${point.lon}`;

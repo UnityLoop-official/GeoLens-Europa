@@ -133,25 +133,25 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                 </div>
             )}
 
-            {/* Layer Control */}
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur p-1.5 rounded-lg shadow-lg z-10 flex gap-1 border border-slate-200">
+            {/* Floating Dock Layer Control - Light Theme */}
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl z-10 flex gap-1 border border-slate-200 ring-1 ring-black/5">
                 <button
                     onClick={() => onLayerChange(selectedLayer === 'satellite' ? 'water' : 'satellite')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${selectedLayer === 'satellite'
-                        ? 'bg-blue-600 text-white shadow-md'
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${selectedLayer === 'satellite'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
                         : 'text-slate-600 hover:bg-slate-100'
                         }`}
                 >
                     <span>🛰️</span> Satellite
                 </button>
-                <div className="w-px bg-slate-300 mx-1" />
+                <div className="w-px bg-slate-200 mx-1 my-1" />
                 {/* Risk Engine V1: Only water, landslide, seismic (mineral hidden) */}
                 {(['water', 'landslide', 'seismic'] as const).map(layer => (
                     <button
                         key={layer}
                         onClick={() => onLayerChange(layer)}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${selectedLayer === layer
-                            ? 'bg-slate-800 text-white shadow-md'
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all capitalize ${selectedLayer === layer
+                            ? 'bg-slate-800 text-white shadow-lg ring-1 ring-black/5'
                             : 'text-slate-600 hover:bg-slate-100'
                             }`}
                     >
@@ -159,6 +159,28 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                     </button>
                 ))}
             </div>
+
+            {/* Legend - Light Theme */}
+            {selectedLayer !== 'satellite' && (
+                <div className="absolute bottom-8 right-8 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-xl z-10 w-64 ring-1 ring-black/5">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{selectedLayer} Risk</span>
+                        <span className="text-[10px] text-slate-400">0 - 100</span>
+                    </div>
+                    <div className="h-3 w-full rounded-full bg-gradient-to-r from-slate-100 via-slate-400 to-slate-800 mb-1"
+                        style={{
+                            background: selectedLayer === 'water' ? 'linear-gradient(to right, #E3F2FD, #0D47A1)' :
+                                selectedLayer === 'landslide' ? 'linear-gradient(to right, #EFEBE9, #3E2723)' :
+                                    selectedLayer === 'seismic' ? 'linear-gradient(to right, #FFEBEE, #B71C1C)' :
+                                        selectedLayer === 'mineral' ? 'linear-gradient(to right, #FFF8E1, #FF6F00)' : ''
+                        }}
+                    />
+                    <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>Low</span>
+                        <span>High</span>
+                    </div>
+                </div>
+            )}
 
             <DeckGL
                 initialViewState={viewState}
@@ -171,11 +193,11 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
             >
                 <MapLibre
                     style={{ width: '100%', height: '100%' }}
-                    mapStyle="https://demotiles.maplibre.org/style.json"
+                    mapStyle="https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
                 >
                     <NavigationControl position="top-right" />
 
-                    {/* Sentinel-2 Cloudless WMS (EOX) */}
+                    {/* Sentinel-2 Cloudless WMS (EOX) - Conditional */}
                     {selectedLayer === 'satellite' && (
                         <Source
                             id="sentinel2-source"
@@ -192,7 +214,7 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
 
                     {/* ESHM20 Seismic Hazard WMS (EFEHR) - Placeholder WMS as direct URL requires specific ID */}
                     {selectedLayer === 'seismic' && (
-                        <div className="absolute bottom-20 left-6 bg-white/90 backdrop-blur p-2 rounded text-xs text-slate-500 z-10">
+                        <div className="absolute bottom-20 left-6 bg-white/90 backdrop-blur p-2 rounded text-xs text-slate-500 z-10 border border-slate-200 shadow-sm">
                             Source: ESHM20 (EFEHR) via GeoLens
                         </div>
                     )}

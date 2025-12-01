@@ -1,6 +1,6 @@
 import { CellScore } from '@geo-lens/geocube';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3003';
 
 export const getCellData = async (h3Index: string): Promise<CellScore> => {
     const res = await fetch(`${API_URL}/api/cell/${h3Index}`);

@@ -68,8 +68,8 @@ server.post('/api/log', async (request, reply) => {
 
 const start = async () => {
     try {
-        await server.listen({ port: 3001, host: '0.0.0.0' });
-        console.log('API Server running at http://localhost:3001');
+        await server.listen({ port: 3003, host: '0.0.0.0' });
+        console.log('API Server running at http://localhost:3003');
     } catch (err) {
         server.log.error(err);
         process.exit(1);

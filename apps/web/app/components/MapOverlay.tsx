@@ -47,7 +47,7 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
             // Fetch data from backend endpoint (using working /api/h3/tile endpoint)
             getTileData: async (tile: any) => {
                 const { x, y, z } = tile.index;
-                const res = await fetch(`http://localhost:3001/api/h3/tile?x=${x}&y=${y}&z=${z}`);
+                const res = await fetch(`http://localhost:3003/api/h3/tile?x=${x}&y=${y}&z=${z}`);
                 if (!res.ok) return [];
                 const data = await res.json();
                 // Transform to compact format client-side
@@ -76,6 +76,25 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
                     wireframe: false,
                     filled: true,
                     extruded: true,
+                    stroked: true, // Enable outlines
+                    lineWidthMinPixels: 1,
+                    lineWidthUnits: 'pixels',
+                    getLineWidth: (d) => {
+                        let score = 0;
+                        let layerKey = selectedLayer;
+                        if (selectedLayer === 'satellite') layerKey = 'water'; // Fallback
+
+                        switch (layerKey) {
+                            case 'water': score = d.w; break;
+                            case 'mineral': score = d.m; break;
+                            case 'landslide': score = d.l; break;
+                            case 'seismic': score = d.s; break;
+                        }
+                        // Dynamic Border Width: Thicker for higher risk
+                        // Range: 2px (Low Risk) to 6px (High Risk)
+                        return 2 + (score * 4);
+                    },
+                    coverage: 0.85,
                     getHexagon: (d) => d.i,
                     getFillColor: (d) => {
                         let score = 0;
@@ -94,8 +113,29 @@ export function getOverlayLayers({ selectedLayer, onHover, onClick }: Props) {
 
                         // @ts-ignore
                         const colorHex = COLOR_SCALES[layerKey](score);
-                        const alpha = selectedLayer === 'satellite' ? 50 : 200;
-                        return [...hexToRgb(colorHex), alpha];
+                        // Transparent Fill: Increased opacity for better visibility
+                        // Alpha: 80 (more visible)
+                        return [...hexToRgb(colorHex), 80];
+                    },
+                    getLineColor: (d) => {
+                        let score = 0;
+                        let layerKey = selectedLayer;
+
+                        if (selectedLayer === 'satellite') {
+                            layerKey = 'water';
+                        }
+
+                        switch (layerKey) {
+                            case 'water': score = d.w; break;
+                            case 'mineral': score = d.m; break;
+                            case 'landslide': score = d.l; break;
+                            case 'seismic': score = d.s; break;
+                        }
+
+                        // @ts-ignore
+                        const colorHex = COLOR_SCALES[layerKey](score);
+                        // Opaque Borders: Fully visible to define the shape and risk
+                        return [...hexToRgb(colorHex), 255];
                     },
                     getElevation: (d) => {
                         const layerKey = selectedLayer === 'satellite' ? 'water' : selectedLayer;

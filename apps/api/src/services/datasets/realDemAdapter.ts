@@ -39,8 +39,14 @@ export class RealDemAdapter implements DatasetAdapter {
         });
 
         // Batch fetch from provider
-        const geoPoints = points.map(p => ({ lat: p.lat, lon: p.lon }));
-        const geoData = await this.provider.fetchBatch(geoPoints);
+        let geoData = new Map<string, { value: number; source: string }>();
+        try {
+            const geoPoints = points.map(p => ({ lat: p.lat, lon: p.lon }));
+            geoData = await this.provider.fetchBatch(geoPoints);
+        } catch (error) {
+            console.error('[RealDemAdapter] Failed to fetch DEM data:', error);
+            // Continue with empty data to avoid crashing the entire request
+        }
 
         // Map results back to H3 indices
         for (const point of points) {

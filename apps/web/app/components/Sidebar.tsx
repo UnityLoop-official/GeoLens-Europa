@@ -15,9 +15,9 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
     if (!cell) return null;
 
     return (
-        <div className="absolute top-4 right-4 w-96 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl z-20 max-h-[90vh] overflow-y-auto text-slate-800 border border-white/50 flex flex-col animate-in slide-in-from-right-10 duration-300">
+        <div className="absolute top-4 right-4 w-96 bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl z-20 max-h-[90vh] overflow-y-auto text-slate-800 border border-white/40 flex flex-col animate-in slide-in-from-right-10 duration-300 ring-1 ring-black/5">
             {/* Header */}
-            <div className="p-5 border-b border-slate-100/50 flex justify-between items-start sticky top-0 bg-white/80 backdrop-blur-xl z-10">
+            <div className="p-5 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/90 backdrop-blur-xl z-10">
                 <div>
                     <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
                         Hazard Cube
@@ -42,6 +42,18 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                 <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="Risk Engine (Terrain Proxy)">
                     <Metric label="Stress Index" value={cell.water.stress} />
                     <Metric label="Recharge Potential" value={cell.water.recharge} />
+                    {cell.water.rain24h !== undefined && (
+                        <div className="flex justify-between text-sm py-2 border-b border-slate-200/50 last:border-0">
+                            <span className="text-slate-500 font-medium">Precipitation (24h)</span>
+                            <span className="font-bold text-blue-600">{cell.water.rain24h.toFixed(1)} mm</span>
+                        </div>
+                    )}
+                    {cell.water.rain72h !== undefined && (
+                        <div className="flex justify-between text-sm py-2 border-b border-slate-200/50 last:border-0">
+                            <span className="text-slate-500 font-medium">Precipitation (72h)</span>
+                            <span className="font-bold text-blue-600">{cell.water.rain72h.toFixed(1)} mm</span>
+                        </div>
+                    )}
                 </Card>
 
                 {/* Landslide Axis */}
@@ -49,7 +61,7 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                     <Metric label="Susceptibility" value={cell.landslide.susceptibility} />
                     <div className="flex justify-between text-sm py-2 border-b border-slate-50 last:border-0">
                         <span className="text-slate-500 font-medium">History</span>
-                        <span className={`font-bold px-2 py-0.5 rounded text-xs ${cell.landslide.history ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                        <span className={`font-bold px-2 py-0.5 rounded text-xs ${cell.landslide.history ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-green-100 text-green-700 border border-green-200'}`}>
                             {cell.landslide.history ? 'Recorded Events' : 'Safe'}
                         </span>
                     </div>
@@ -64,23 +76,13 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                     </div>
                 </Card>
 
-                {/* Mineral Axis - HIDDEN FOR RISK ENGINE V1 (focused on water/flood and landslide only) */}
-                {/* TODO: Re-enable when mineral prospectivity model is validated */}
-                {/* <Card title="Resources" icon="💎" color="purple" score={cell.mineral.score} source="Modeled Data">
-                    <Metric label="Prospectivity" value={cell.mineral.prospectivity} />
-                    <div className="flex justify-between text-sm py-2 border-b border-slate-50 last:border-0">
-                        <span className="text-slate-500 font-medium">Type</span>
-                        <span className="font-bold text-slate-800">{cell.mineral.type}</span>
-                    </div>
-                </Card> */}
-
                 {/* Metadata */}
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center">
+                    <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center justify-center text-center hover:bg-slate-100 transition-colors">
                         <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Biome</span>
                         <span className="text-xs font-semibold text-slate-700 mt-1 line-clamp-1">{cell.metadata.biome}</span>
                     </div>
-                    <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center">
+                    <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center justify-center text-center hover:bg-slate-100 transition-colors">
                         <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Elevation</span>
                         <span className="text-xs font-semibold text-slate-700 mt-1">{cell.metadata.elevation.toFixed(0)}m</span>
                     </div>
@@ -91,7 +93,7 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
                     <button
                         onClick={onAnalyze}
                         disabled={loading}
-                        className="group relative w-full py-3.5 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:translate-y-0 overflow-hidden"
+                        className="group relative w-full py-3.5 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:translate-y-0 overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         <div className="relative flex justify-center items-center gap-2">
@@ -115,7 +117,7 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis }:
 
                 {/* AI Result */}
                 {analysis && (
-                    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-2xl p-5 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-2xl p-5 shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="absolute top-0 right-0 p-3 opacity-10">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" className="text-indigo-600"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" /></svg>
                         </div>
@@ -168,7 +170,7 @@ function Card({ title, icon, color, score, source, children }: { title: string, 
     };
 
     return (
-        <div className={`rounded-xl border border-slate-100 p-4 transition-all hover:shadow-md ${bgClasses[color as keyof typeof bgClasses]}`}>
+        <div className={`rounded-2xl border border-slate-200 p-4 transition-all hover:shadow-md ${bgClasses[color as keyof typeof bgClasses]}`}>
             <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2">
                     <span className="text-lg">{icon}</span>
@@ -198,7 +200,7 @@ function Card({ title, icon, color, score, source, children }: { title: string, 
 
 function Metric({ label, value }: { label: string, value: number }) {
     return (
-        <div className="flex justify-between text-sm py-2 border-b border-slate-50 last:border-0">
+        <div className="flex justify-between text-sm py-2 border-b border-slate-200/50 last:border-0">
             <span className="text-slate-500 font-medium">{label}</span>
             <span className="font-bold text-slate-800">{value.toFixed(2)}</span>
         </div>

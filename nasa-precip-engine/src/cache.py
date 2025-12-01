@@ -21,7 +21,7 @@ from datetime import datetime
 from typing import Dict, Tuple, Optional
 import xarray as xr
 
-from config import CACHE_MAX_SIZE, CACHE_TTL_SECONDS
+from .config import CACHE_MAX_SIZE, CACHE_TTL_SECONDS
 
 
 @dataclass

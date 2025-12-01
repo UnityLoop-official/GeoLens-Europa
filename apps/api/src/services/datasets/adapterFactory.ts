@@ -44,10 +44,11 @@ export function createDataAdapters(): DataAdapters {
         console.log('   └─ CLC2018 (land cover, Copernicus)');
 
         return {
-            dem: new RealDemAdapter(),
-            elsus: new RealElsusAdapter(),
-            eshm20: new RealEshm20Adapter(),
-            clc: new RealClcAdapter(),
+            // dem: new RealDemAdapter(), // TEMPORARILY DISABLED due to fetch errors
+            dem: new DemAdapter(), // Mock
+            elsus: new ElsusAdapter(), // Mock
+            eshm20: new Eshm20Adapter(), // Mock
+            clc: new ClcAdapter(), // Mock
             precipitation: new RealPrecipitationAdapter()
         };
     } else {
