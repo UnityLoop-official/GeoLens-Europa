@@ -135,13 +135,25 @@ def load_imerg_cube(
         logger.info(f"[IMERG] Found {len(results)} granules ({source_name})")
 
         # Open granules via OPeNDAP
-        # earthaccess.open() returns list of xr.Dataset objects
-        datasets = earthaccess.open(results)
+        # earthaccess.open() returns file-like objects
+        files = earthaccess.open(results)
 
-        if not datasets:
+        if not files:
             raise RuntimeError("Failed to open IMERG granules")
 
-        logger.info(f"[IMERG] Opened {len(datasets)} datasets via OPeNDAP")
+        logger.info(f"[IMERG] Opened {len(files)} file objects")
+
+        # Convert file objects to xarray Datasets
+        datasets = []
+        for f in files:
+            try:
+                ds = xr.open_dataset(f)
+                datasets.append(ds)
+            except Exception as e:
+                logger.warning(f"[IMERG] Failed to open file as xarray: {e}")
+
+        if not datasets:
+            raise RuntimeError("Failed to open any granules as xarray Datasets")
 
         # Accumulate precipitation
         precip_accumulated = accumulate_precip(datasets, hours)

@@ -5,7 +5,13 @@ const nextConfig: NextConfig = {
     '@geo-lens/core-geo',
     '@geo-lens/geocube',
     'resium',
-    'cesium'
+    'cesium',
+    '@deck.gl/core',
+    '@deck.gl/layers',
+    '@deck.gl/geo-layers',
+    '@deck.gl/react',
+    'react-map-gl',
+    'maplibre-gl'
   ],
 };
 

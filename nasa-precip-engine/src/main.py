@@ -18,7 +18,7 @@ ENVIRONMENT:
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -175,7 +175,8 @@ async def get_precipitation_for_h3(request: PrecipRequest):
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid t_ref timestamp")
     else:
-        t_ref = datetime.utcnow()
+        # Default to 6 hours ago to account for IMERG Early Run latency (~4h)
+        t_ref = datetime.utcnow() - timedelta(hours=6)
 
     # Validate H3 indices
     try:

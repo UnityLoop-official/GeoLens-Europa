@@ -210,6 +210,10 @@ export default function MapView({ selectedLayer, onLayerChange }: Props) {
                 onClick={onClick}
                 onHover={onHover}
                 pickingRadius={5}
+                glOptions={{
+                    preserveDrawingBuffer: true,
+                    failIfMajorPerformanceCaveat: false
+                }}
             >
                 <MapLibre
                     style={{ width: '100%', height: '100%' }}

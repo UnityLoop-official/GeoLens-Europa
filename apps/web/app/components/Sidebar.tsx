@@ -40,8 +40,8 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis, s
                                 key={layer}
                                 onClick={() => onLayerChange(layer)}
                                 className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide transition-all border ${selectedLayer === layer
-                                        ? 'bg-slate-800 text-white border-slate-800 shadow-md'
-                                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                    ? 'bg-slate-800 text-white border-slate-800 shadow-md'
+                                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                                     }`}
                             >
                                 {layer === 'precipitation' ? 'Rain' : layer}
@@ -59,7 +59,7 @@ export default function Sidebar({ cell, onClose, onAnalyze, loading, analysis, s
 
             <div className="p-5 space-y-6">
                 {/* Water Axis */}
-                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="NASA GPM & Risk Engine">
+                <Card title="Water Stress" icon="💧" color="blue" score={cell.water.score} source="NASA GPM (~4h latency) & Risk Engine">
                     <Metric label="Stress Index" value={cell.water.stress} />
                     <Metric label="Recharge Potential" value={cell.water.recharge} />
                     {cell.water.rain24h !== undefined && (
