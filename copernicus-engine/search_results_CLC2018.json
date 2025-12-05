@@ -1,0 +1,570 @@
+[
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/clc2018",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides pan-European CORINE Land Cover inventory for 44 thematic classes for the 2018 reference year. The dataset  has a Minimum Mapping Unit (MMU) of 25 hectares (ha) for areal phenomena and a Minimum Mapping Width (MMW) of 100 m for linear phenomena and is available as vector and as 100 m raster data.",
+    "effective": "2019-06-13T21:00:00+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-0426dfd9b0564c66881db3a8d87e4ab2.png",
+          "filename": "CLC2018.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-8e6fc79bbe866c73ba323ae7ea746e23.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-d30215d4b424b038472d6fb37574c922.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-4b8e64bad8191e85cc3543b903957990.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-d77ae7194eed5de5680008e39a28159d.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-962555731c5da197c55ddbac207d87d9.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-564ae837dad239ff84bb34ff566e0b26.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-ea747026e83e7ca5eda397cb948b3818.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-ae57caa0b319f838930f38327bb7f195.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-2d5e5194995c76846d5ffd91d730f62a.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 97908,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover 2018 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/clc-2000",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides pan-European CORINE Land Cover inventory for 44 thematic classes for the 2000 reference year. The dataset has a Minimum Mapping Unit (MMU) of 25 hectares (ha) for areal phenomena and a Minimum Mapping Width (MMW) of 100 m for linear phenomena and is available as vector and as 100 m raster data.",
+    "effective": "2022-01-20T08:40:02+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-0b7c8f01a5ce451a572456783670f8e8.png",
+          "filename": "CLC2000.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-c8c0b7494b4683a07013b93df6982bf6.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-67902b2bc50e3512dbec7e0d041d9295.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-1e5fa776d5bf801fe6e858c5c32da2be.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-f92234b2597f2631a44068d513cb5be1.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-3d68e7febb372b508a0c56b0eabe4f3f.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-895d02df2679a03f7a0b3b6997eb10e6.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-d846965bea6201bec6225edd989762d1.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-d5c80375f584e2d9e2ee36f85f595fa3.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-ea676e7a19cbca4d535088c1601107d6.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 91689,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover 2000 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/clc-2006",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides pan-European CORINE Land Cover inventory for for 44 thematic classes the 2006 reference year. The dataset has a Minimum Mapping Unit (MMU) of 25 hectares (ha) for areal phenomena and a Minimum Mapping Width (MMW) of 100 m for linear phenomena and is available as vector and as 100 m raster data.",
+    "effective": "2022-01-21T11:06:25+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-bee4201099a2ffa9f31fc4a7df9e2891.png",
+          "filename": "CLC2006.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-b507fc2a46c45876f3d708a19350a598.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-d8228b8ed19d73551675beb72941cfbc.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-c26a98dfb4127b57869beb70fb7e9a5c.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-0560c2159ea5c2df07b5ccb876e8ce0a.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-fe39b28bf5662f19f87e1e6fcb2da18d.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-28bbd519d8c22aecd5fca67db2a09183.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-5ac40aeec34b9de328ebe65fdf9477c5.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-2a566df737a0f4de334856d9d07cc1c7.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-31d8c6aa2640f9745b7dc9fb9438fb75.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 95175,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover 2006 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/clc-2012",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides pan-European CORINE Land Cover inventory for 44 thematic classes for the 2012 reference year. The dataset has a Minimum Mapping Unit (MMU) of 25 hectares (ha) for areal phenomena and a Minimum Mapping Width (MMW) of 100 m for linear phenomena and is available as vector and as 100 m raster data.",
+    "effective": "2013-05-28T07:20:00+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-87cfcdc719db5ef7af405eaf72b8d40a.png",
+          "filename": "CLC2012.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-0ce35f855c9f4221d85febd4bbca65ca.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-5bf801e4baa1a753016e9d13c236e931.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-5383eb049f1a68fe7822dcb7c41d3088.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-61a2194cccf7de31fffa86c57f710862.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-97712c5575d8734bcc28fbbbc9b149af.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-8ec91ee99d476849c5027bb203e6d29c.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-4d2a77a6c64e3ee25073739338397174.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-660a1ebced5477988ab73cefefd693f0.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-4074e7962f32f5cc66a8cb03754404db.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 97920,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover 2012 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/clc-1990",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides pan-European CORINE Land Cover inventory for 44 thematic classes for the 1990 reference year. The dataset has a Minimum Mapping Unit (MMU) of 25 hectares (ha) for areal phenomena and a Minimum Mapping Width (MMW) of 100 m for linear phenomena and is available as vector and as 100 m raster data.",
+    "effective": "2022-01-20T08:27:13+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-f0b38a1864462c7029d9ebc86750514e.png",
+          "filename": "CLC1990.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-46508caa06c71cac6ff05933e975861c.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-a990e9cf8b3f18ae426ca3552a0db4d3.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-a65058586d546e39a95941ed19b4eb8f.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-c19197194eeb7b7855e82ee32ff5c53d.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-a681f911ae60f75711d853e925136c5e.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-e0504a213fa3431b34599131df1125d8.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-a771951a962793fbdbe50e8157252f73.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-3f82cd34471163b1e5cb7fdcd3d72f4b.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-de5868c63ab68a47827ff79a7364eaad.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 92228,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover 1990 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/cha-2006-2012",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides land cover change information between the 2006 and 2012 CLC status layers. The dataset has a Minimum Mapping Unit (MMU) of 5 hectares (ha) and is available as vector and as 100 m raster data.",
+    "effective": "2022-01-21T11:06:27+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-d2c473e908335c8dd9de8bf4ec7029ef.png",
+          "filename": "CHA_2006_2012.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-dfe4171cc891aed2d6c9dff3f94df9c0.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-20d67f42e45599e901acd2ea7da0b443.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-e1a28732bedf265e8fef465ceee8a7f3.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-cfd617355a250410676b25641671fd33.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-f71c813fc060b74487e69071986b17ba.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-18ba3f9baff417ecd75e623f0857d72c.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-268b00ada55200c3513ae8c9849b2488.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-fa9a7a41299983c12f785ae7d9807cff.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-b98838896eea8baa4a5151ff5e8c28c1.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 20627,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover Change 2006-2012 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/lcc-2012-2018",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides land cover change information between the 2012 and 2018 CLC status layers. The dataset has a Minimum Mapping Unit (MMU) of 5 hectares (ha) and is available as vector and as 100 m raster data.",
+    "effective": "2018-12-21T08:25:00+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-ac13641af51e96a2e59d0b9040880282.png",
+          "filename": "CHA_2012_2018.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-f6d98a3de744947d196032b187937a86.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-4d0fccf0efd787d4c31354bd5a953d12.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-009b04cc819fdce1e664073dafa3008f.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-e4a62ef715fc75a2c3ba3a9442bac522.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-3e406d69c54117f3e2f79af3fc300437.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-db97590a958a5c5ba8a37035f6880fea.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-f3e70535e4c7fce22f14d2a5e13c9fce.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-a89a5a848658eff6b853959802e2273d.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-e50d00d0a2639ddc236709ea62ac1196.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 14454,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover Change 2012-2018 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  },
+  {
+    "@id": "https://land.copernicus.eu/api/en/products/corine-land-cover/cha-1990-2000",
+    "@type": "DataSet",
+    "UID,title,description,dataset_full_format,dataset_download_information,@id,review_state": null,
+    "description": "Provides land cover change information between the 1990 and 2000 CLC status layers. The dataset has a Minimum Mapping Unit (MMU) of 5 hectares (ha) and is available as vector and as 100 m raster data.",
+    "effective": "2022-01-21T11:06:26+00:00",
+    "getRemoteUrl": null,
+    "image_field": "image",
+    "image_scales": {
+      "image": [
+        {
+          "content-type": "image/png",
+          "download": "@@images/image-400-53908b1fbba26d0da7b4477acecae7bb.png",
+          "filename": "CHA_1990_2000.png",
+          "height": 400,
+          "scales": {
+            "big": {
+              "download": "@@images/image-80-3a5e7f52ffc71e59bc49ca2a2db2d146.png",
+              "height": 80,
+              "width": 80
+            },
+            "icon": {
+              "download": "@@images/image-32-0e2c28afaab2ad3c7eff4b68884bd7ab.png",
+              "height": 32,
+              "width": 32
+            },
+            "medium": {
+              "download": "@@images/image-60-c25a0618041440f6a50db51a00dce812.png",
+              "height": 60,
+              "width": 60
+            },
+            "mini": {
+              "download": "@@images/image-200-0fc5726efa8a67c60100b2bdebe8f90a.png",
+              "height": 200,
+              "width": 200
+            },
+            "preview": {
+              "download": "@@images/image-400-3e5ce67ef588774211b0e741a666bf8f.png",
+              "height": 400,
+              "width": 400
+            },
+            "small": {
+              "download": "@@images/image-48-3495cd6d9c3a3c93af5ebf6f552a7b5b.png",
+              "height": 48,
+              "width": 48
+            },
+            "thumb": {
+              "download": "@@images/image-128-ade2447a102b4d9d9a58a7326ee1c58d.png",
+              "height": 128,
+              "width": 128
+            },
+            "tile": {
+              "download": "@@images/image-64-4ad96066f310748f424c82576bd23f0d.png",
+              "height": 64,
+              "width": 64
+            },
+            "tiny": {
+              "download": "@@images/image-24-aaed981874dabcd516e55236f7f21189.png",
+              "height": 24,
+              "width": 24
+            }
+          },
+          "size": 31223,
+          "width": 400
+        }
+      ]
+    },
+    "review_state": "published",
+    "title": "CORINE Land Cover Change 1990-2000 (vector/raster 100 m), Europe, 6-yearly",
+    "type_title": "DataSet"
+  }
+]

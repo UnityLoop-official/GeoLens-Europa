@@ -1,0 +1,24 @@
+# Copernicus Engine Dependencies
+# Python 3.11+
+
+# Web framework (optional - for future admin endpoints)
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# HTTP client
+requests>=2.31.0
+
+# JWT authentication for land.copernicus.eu
+PyJWT>=2.8.0
+cryptography>=41.0.0
+
+# Data validation
+pydantic>=2.5.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Optional: Geospatial processing (for future COG/PMTiles conversion)
+# Uncomment when implementing raster processing utilities
+# gdal>=3.8.0
+# rasterio>=1.3.9

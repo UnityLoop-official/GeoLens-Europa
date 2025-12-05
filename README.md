@@ -279,10 +279,56 @@ Output JSON:
   - macOS: `brew install tippecanoe`
   - or build from source on other platforms
 
-**Python Stack (for NASA Precipitation):**
+**Python Stack:**
 - **Python** (v3.11+)
 - **pip** (latest)
 - **NASA Earthdata Account** (free): [Register here](https://urs.earthdata.nasa.gov/users/new)
+- **Copernicus Data Space Account** (free): [Register here](https://dataspace.copernicus.eu/)
+
+### Data Acquisition
+
+**Automatically Downloaded** (No manual intervention required):
+- ✅ **Copernicus DEM GLO-30** - Fetched from AWS S3
+- ✅ **NASA GPM IMERG** - Streamed via OPeNDAP
+- ✅ **ELSUS v2** - Auto-downloaded on first use (~500MB)
+
+**Automated via Copernicus Engine** (Python CLI tool):
+
+The new **Copernicus Engine** eliminates manual downloads for DEM and Land Cover datasets:
+
+```bash
+# Setup Copernicus credentials
+cd copernicus-engine
+cp .env.example .env
+# Edit .env with your Copernicus API credentials
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download DEM for Europe
+python -m src.fetch_basemaps dem --bbox -10.0 35.0 40.0 72.0
+
+# Download Land Cover for Europe
+python -m src.fetch_basemaps landcover --bbox -10.0 35.0 40.0 72.0
+```
+
+See [copernicus-engine/README.md](copernicus-engine/README.md) for detailed configuration and usage.
+
+**Manual Download (Legacy - Only if Copernicus Engine fails):**
+
+⚠️ If automated download fails, you can still manually download:
+
+1. **Corine Land Cover 2018 (CLC2018)**
+   - Source: [Copernicus Land Monitoring Service](https://land.copernicus.eu/en/products/corine-land-cover/clc2018)
+   - File: CLC2018 GeoTIFF (~2GB)
+   - Save to: `data/raw/CLC2018_100m.tif`
+
+2. **ESHM20 Seismic Hazard Map (PGA 475-year)**
+   - **Primary Source**: [EFEHR GitLab Repository](https://gitlab.seismo.ethz.ch/efehr/eshm20)
+   - **Alternative 1**: [Global Earthquake Model](https://www.globalquakemodel.org/product/europe-hazard)
+   - **Alternative 2**: [EFEHR Portal](http://www.efehr.org/earthquake-hazard/data-access/)
+   - File: ESHM20_PGA_475.tif
+   - Save to: `data/raw/ESHM20_PGA_475.tif`
 
 ### Installation
 
@@ -322,28 +368,20 @@ Output JSON:
 
 ### Running Locally
 
+⚠️ **IMPORTANT**: Before running, ensure you have:
+1. Downloaded CLC2018 and ESHM20 datasets (see Prerequisites)
+2. Configured NASA Earthdata credentials in `nasa-precip-engine/.env`
+3. Set `USE_REAL_DATA=true` in `apps/api/.env`
+
 **Option 1: Full Stack (Recommended)**
 
 Terminal 1 - NASA Precipitation Microservice:
 ```bash
 cd nasa-precip-engine
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8001
+python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8001
 ```
 
-Terminal 2 - Node.js Backend + Frontend:
-```bash
-npm run dev --workspaces
-```
-
-**Option 2: Individual Services**
-
-Terminal 1 - NASA Microservice:
-```bash
-cd nasa-precip-engine
-uvicorn src.main:app --reload --port 8001
-```
-
-Terminal 2 - Backend:
+Terminal 2 - Node.js Backend:
 ```bash
 cd apps/api
 npm run dev
@@ -357,7 +395,7 @@ npm run dev
 
 **Access Points:**
 -   **Frontend**: [http://localhost:3000](http://localhost:3000)
--   **Backend API**: [http://localhost:3001](http://localhost:3001)
+-   **Backend API**: [http://localhost:3003](http://localhost:3003) (Note: Port 3003, not 3001)
 -   **NASA Precipitation API**: [http://localhost:8001](http://localhost:8001)
 -   **NASA API Docs**: [http://localhost:8001/docs](http://localhost:8001/docs) (Swagger UI)
 
@@ -455,14 +493,40 @@ Expected response:
 
 ## 🧭 Roadmap
 
+### Completed
 -   [x] **Phase 1**: MVP with H3 grid, Deck.gl, PMTiles serving
--   [x] **Phase 2**: Integration with real NASA GPM IMERG precipitation data **← COMPLETED**
--   [x] **Phase 2.5**: Integration with Copernicus DEM, ELSUS, ESHM20 **← COMPLETED**
+-   [x] **Phase 2**: NASA GPM IMERG precipitation microservice (Python FastAPI)
+-   [x] **Phase 2.5**: Real data providers integration (Copernicus DEM, ELSUS, ESHM20, CLC)
+-   [x] **Phase 2.6**: Backend orchestration for multi-source data fusion
+-   [x] **Phase 2.7**: Copernicus Engine for automated dataset downloads
+
+### In Progress
+-   [~] **Phase 2.8**: Complete real data integration **← CURRENT**
+    - ✅ NASA precipitation microservice running
+    - ✅ Backend configured with all real data providers
+    - ✅ Cell endpoint updated to fetch NASA data
+    - ✅ **Copernicus Engine** - Automated DEM/Land Cover downloads via API
+    - ⏳ **PENDING**: Download CLC2018 and ESHM20 using Copernicus Engine
+    - ⏳ **PENDING**: End-to-end testing with frontend
+    - ⏳ **PENDING**: Frontend UI updates to display precipitation values
+
+### Upcoming
 -   [ ] **Phase 3**: "Chat with Map" – natural language querying using Gemini
 -   [ ] **Phase 4**: Export of analysis reports (PDF, GeoJSON)
 -   [ ] **Phase 5**: 3D cross-sections and volume views
 -   [ ] **Phase 6**: Copernicus Sentinel-2 satellite imagery integration
 -   [ ] **Phase 7**: Time-series analysis and trend detection
+
+### Current Blockers
+1. **Copernicus Credentials Required**: Setup API access
+   - Register at: https://dataspace.copernicus.eu/
+   - Configure `.env` in `copernicus-engine/`
+   - Run automated download scripts (see Data Acquisition section)
+
+2. **Dataset Download Pending**:
+   - Use Copernicus Engine CLI to download CLC2018 and ESHM20
+   - Legacy manual download still available as fallback
+   - See [copernicus-engine/README.md](copernicus-engine/README.md) for instructions
 
 ---
 
@@ -470,7 +534,8 @@ Expected response:
 
 - **[TEST_REPORT.md](TEST_REPORT.md)** - Integration testing results
 - **[NASA_PRECIPITATION_IMPLEMENTATION_COMPLETE.md](NASA_PRECIPITATION_IMPLEMENTATION_COMPLETE.md)** - Complete implementation details
-- **[nasa-precip-engine/README.md](nasa-precip-engine/README.md)** - NASA microservice documentation
+- **[nasa-precip-engine/README.md](nasa-precip-engine/README.md)** - NASA precipitation microservice documentation
+- **[copernicus-engine/README.md](copernicus-engine/README.md)** - Copernicus dataset download automation
 
 ---
 
