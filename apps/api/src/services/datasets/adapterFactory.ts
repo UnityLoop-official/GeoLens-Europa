@@ -6,7 +6,11 @@
  * - USE_REAL_DATA=false -> Use mock data generators (faster, no external dependencies)
  */
 
+import * as dotenv from 'dotenv';
 import { DatasetAdapter } from './types';
+
+// Load environment variables before checking USE_REAL_DATA
+dotenv.config();
 
 // Mock adapters
 import { DemAdapter } from './demAdapter';
@@ -38,17 +42,16 @@ export function createDataAdapters(): DataAdapters {
     if (useRealData) {
         console.log('🌍 [AdapterFactory] Using REAL geospatial data providers');
         console.log('   ├─ Copernicus DEM (30m elevation, AWS S3)');
-        console.log('   ├─ GPM IMERG (real-time precipitation, NASA)');
+        console.log('   ├─ NASA IMERG (real-time precipitation)');
         console.log('   ├─ ELSUS v2 (landslide susceptibility, ESDAC)');
         console.log('   ├─ ESHM20 (seismic hazard, EFEHR)');
         console.log('   └─ CLC2018 (land cover, Copernicus)');
 
         return {
-            // dem: new RealDemAdapter(), // TEMPORARILY DISABLED due to fetch errors
-            dem: new DemAdapter(), // Mock
-            elsus: new ElsusAdapter(), // Mock
-            eshm20: new Eshm20Adapter(), // Mock
-            clc: new ClcAdapter(), // Mock
+            dem: new RealDemAdapter(),
+            elsus: new RealElsusAdapter(),
+            eshm20: new RealEshm20Adapter(),
+            clc: new RealClcAdapter(),
             precipitation: new RealPrecipitationAdapter()
         };
     } else {
