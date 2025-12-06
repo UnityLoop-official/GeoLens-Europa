@@ -221,20 +221,27 @@ class CLMSClient:
         self,
         query: Optional[str] = None,
         portal_type: str = "DataSet",
-        metadata_fields: Optional[List[str]] = None,
-        batch_size: int = 25
+        batch_size: int = 25,
+        **kwargs
     ) -> List[Dict[str, Any]]:
         """
-        Search for datasets using @search endpoint
+        Search for datasets using /api/@search endpoint
 
         Args:
             query: Search query string (optional)
             portal_type: Type filter (default: "DataSet")
-            metadata_fields: Fields to include in response (UID, dataset_full_format, etc.)
             batch_size: Number of results per batch
+            **kwargs: Additional search parameters
 
         Returns:
-            List of dataset metadata dictionaries
+            List of simplified dataset dictionaries:
+            {
+                "uid": str,
+                "title": str,
+                "url": str,
+                "description": str,
+                "download_information": dict or None
+            }
 
         Raises:
             RuntimeError: If search fails
@@ -251,11 +258,8 @@ class CLMSClient:
         if query:
             params["SearchableText"] = query
 
-        if metadata_fields:
-            params["metadata_fields"] = ",".join(metadata_fields)
-        else:
-            # Default fields needed for downloads
-            params["metadata_fields"] = "UID,dataset_full_format,dataset_download_information"
+        # Add any additional parameters
+        params.update(kwargs)
 
         headers = {
             "Authorization": f"Bearer {token}",
@@ -273,38 +277,112 @@ class CLMSClient:
             response.raise_for_status()
             data = response.json()
 
-            items = data.get("items", [])
-            logger.info(f"[Search] Found {len(items)} datasets")
+            raw_items = data.get("items", [])
+            logger.info(f"[Search] Found {len(raw_items)} datasets")
 
-            return items
+            # Simplify response structure
+            simplified_items = []
+            for item in raw_items:
+                simplified_items.append({
+                    "uid": item.get("UID"),
+                    "title": item.get("title"),
+                    "url": item.get("@id"),
+                    "description": item.get("description", ""),
+                    "download_information": item.get("dataset_download_information")
+                })
+
+            return simplified_items
 
         except requests.RequestException as e:
             logger.error(f"[Search] Request failed: {e}")
             raise RuntimeError(f"Dataset search failed: {e}")
 
-    def get_download_urls(
+    def get_downloadable_files(self, dataset_details: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Extract downloadable files information from dataset details
+
+        This method parses dataset_download_information from full dataset details
+        (obtained via get_dataset_details) and returns a clean list of available files.
+
+        Args:
+            dataset_details: Full dataset details dict from get_dataset_details()
+
+        Returns:
+            List of file information dictionaries:
+            {
+                "id": str,
+                "name": str,
+                "format": str,
+                "type": str (RASTER/VECTOR),
+                "collection": str (e.g., "100 m"),
+                "download_information_id": str
+            }
+
+        Raises:
+            ValueError: If no download information available
+        """
+        logger.info("[GetFiles] Extracting downloadable files from dataset details")
+
+        download_info = dataset_details.get("dataset_download_information")
+        if not download_info:
+            raise ValueError("No dataset_download_information in dataset details")
+
+        # Handle both dict with 'items' and direct list
+        if isinstance(download_info, dict):
+            items = download_info.get("items", [])
+        elif isinstance(download_info, list):
+            items = download_info
+        else:
+            raise ValueError(f"Unexpected download_information format: {type(download_info)}")
+
+        if not items:
+            raise ValueError("No downloadable files found in dataset_download_information")
+
+        # Simplify structure
+        files = []
+        for item in items:
+            files.append({
+                "id": item.get("@id"),
+                "name": item.get("name", ""),
+                "format": item.get("full_format", ""),
+                "type": item.get("name", ""),  # RASTER/VECTOR
+                "collection": item.get("collection", ""),
+                "download_information_id": item.get("@id")
+            })
+
+        logger.info(f"[GetFiles] Found {len(files)} downloadable files")
+        return files
+
+    def get_download_file_urls(
         self,
         dataset_uid: str,
         download_information_id: str,
-        bbox: Optional[tuple[float, float, float, float]] = None,
         date_from: Optional[str] = None,
-        date_to: Optional[str] = None
+        date_to: Optional[str] = None,
+        bbox: Optional[tuple[float, float, float, float]] = None,
+        **kwargs
     ) -> List[str]:
         """
-        Get direct download URLs for a dataset using @get-download-file-urls
+        Get direct download URLs using /api/@get-download-file-urls
+
+        Generic wrapper for the CLMS auxiliary API endpoint that returns direct
+        download URLs for datasets. This works for some datasets but NOT all
+        (e.g., CLC2018 requires manual download of pre-packaged files).
 
         Args:
             dataset_uid: Dataset unique identifier
             download_information_id: Download collection identifier
+            date_from: Start date (YYYY-MM-DD) for temporal filtering
+            date_to: End date (YYYY-MM-DD) for temporal filtering
             bbox: Bounding box (x_min, y_min, x_max, y_max) in EPSG:4326
-            date_from: Start date in YYYY-MM-DD format (optional)
-            date_to: End date in YYYY-MM-DD format (optional)
+            **kwargs: Additional parameters
 
         Returns:
-            List of direct download URLs
+            List of direct download URLs (strings)
 
         Raises:
-            RuntimeError: If request fails
+            ValueError: If API returns error message (e.g., date range issues)
+            RuntimeError: If HTTP request fails
         """
         logger.info(f"[GetURLs] Getting download URLs for dataset: {dataset_uid}")
 
@@ -329,6 +407,9 @@ class CLMSClient:
         if date_to:
             params["date_to"] = date_to
 
+        # Add any additional parameters
+        params.update(kwargs)
+
         headers = {
             "Authorization": f"Bearer {token}",
             "Accept": "application/json"
@@ -347,32 +428,38 @@ class CLMSClient:
 
             logger.debug(f"[GetURLs] Raw response: {data}")
 
-            # Check if response is a list of URLs
-            if isinstance(data, list):
-                logger.info(f"[GetURLs] Retrieved {len(data)} download URLs")
-                return data
-            # Check if response is a dict with URLs in some field
-            elif isinstance(data, dict):
-                # Try common fields that might contain URLs
+            # Check for API error responses
+            if isinstance(data, dict):
+                # Check if response indicates an error
+                if data.get("status") == "error":
+                    error_msg = data.get("msg", "Unknown error")
+                    logger.error(f"[GetURLs] API returned error: {error_msg}")
+                    raise ValueError(f"CLMS API error: {error_msg}")
+
+                # Try to extract URLs from dict
                 if "items" in data:
                     urls = data["items"]
-                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs from 'items' field")
+                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs")
                     return urls
                 elif "urls" in data:
                     urls = data["urls"]
-                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs from 'urls' field")
+                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs")
                     return urls
                 elif "files" in data:
                     urls = data["files"]
-                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs from 'files' field")
+                    logger.info(f"[GetURLs] Retrieved {len(urls)} download URLs")
                     return urls
                 else:
-                    logger.warning(f"[GetURLs] Dict response but no recognized URL field. Keys: {list(data.keys())}")
-                    logger.warning(f"[GetURLs] Full response: {data}")
-                    return []
+                    # Unrecognized dict format
+                    logger.warning(f"[GetURLs] Unrecognized response format. Keys: {list(data.keys())}")
+                    raise ValueError(f"Unrecognized API response format: {data}")
+
+            # Check if response is a list of URLs
+            elif isinstance(data, list):
+                logger.info(f"[GetURLs] Retrieved {len(data)} download URLs")
+                return data
             else:
-                logger.warning(f"[GetURLs] Unexpected response type: {type(data)}")
-                return []
+                raise ValueError(f"Unexpected response type: {type(data)}")
 
         except requests.RequestException as e:
             logger.error(f"[GetURLs] Request failed: {e}")
@@ -507,150 +594,39 @@ class CLMSClient:
         bbox: Optional[tuple[float, float, float, float]] = None
     ) -> List[Path]:
         """
-        Download CORINE Land Cover 2018 dataset (pre-packaged raster 100m)
+        Download CORINE Land Cover 2018 dataset
 
-        This method:
-        1. Searches for CLC2018 dataset
-        2. Gets full dataset details
-        3. Finds pre-packaged raster 100m file
-        4. Downloads the file
+        **IMPORTANT**: Programmatic download of CLC2018 via CLMS API is currently
+        not supported for pre-packaged files. The @get-download-file-urls endpoint
+        requires temporal parameters that are not applicable to static datasets.
+
+        **Manual Download Required**:
+        1. Visit https://land.copernicus.eu/en/products/corine-land-cover/clc2018
+        2. Download the pre-packaged raster 100m ZIP file (u2018_clc2018_v2020_20u1_raster100m.zip, ~125 MB)
+        3. Place it in data/raw/clc/ directory
+        4. The ETL pipeline will automatically use the local file
 
         Args:
-            output_dir: Output directory for downloaded files
-            bbox: Optional bounding box (for future implementation)
-
-        Returns:
-            List of downloaded file paths
+            output_dir: Output directory (unused - for API consistency)
+            bbox: Bounding box (unused - for API consistency)
 
         Raises:
-            RuntimeError: If download fails
+            NotImplementedError: Always raised with instructions for manual download
         """
-        logger.info("[CLC2018] Starting CLC2018 download workflow")
+        logger.error("[CLC2018] Attempted programmatic download of CLC2018")
 
-        if bbox:
-            logger.warning("[CLC2018] Bounding box filtering not yet supported for pre-packaged downloads")
-
-        # Step 1: Search for CLC2018
-        logger.info("[CLC2018] Step 1/3: Searching for CLC2018 dataset...")
-        results = self.search_datasets(query="CLC2018")
-
-        if not results:
-            raise RuntimeError("CLC2018 dataset not found in search results")
-
-        # Find CLC2018 dataset (exact match)
-        clc2018_dataset = None
-        for item in results:
-            title = item.get("title", "").lower()
-            # Match "CORINE Land Cover 2018" exactly
-            if "corine land cover 2018" in title and "change" not in title:
-                clc2018_dataset = item
-                break
-
-        if not clc2018_dataset:
-            raise RuntimeError("Could not identify CLC2018 in search results")
-
-        dataset_url = clc2018_dataset.get("@id")
-        logger.info(f"[CLC2018] Found dataset: {clc2018_dataset.get('title')}")
-        logger.info(f"[CLC2018] URL: {dataset_url}")
-
-        # Step 2: Get full dataset details
-        logger.info("[CLC2018] Step 2/3: Getting full dataset details...")
-        dataset_details = self.get_dataset_details(dataset_url)
-
-        dataset_uid = dataset_details.get("UID")
-        logger.info(f"[CLC2018] UID: {dataset_uid}")
-
-        # Get downloadable_files (pre-packaged files)
-        downloadable_files = dataset_details.get("downloadable_files", {})
-        file_items = downloadable_files.get("items", [])
-
-        if not file_items:
-            raise RuntimeError("No downloadable files available for CLC2018")
-
-        logger.info(f"[CLC2018] Found {len(file_items)} pre-packaged file options")
-
-        # Find raster 100m file
-        raster_file = None
-        for file_item in file_items:
-            if (file_item.get("type") == "Raster" and
-                file_item.get("format") == "Geotiff" and
-                file_item.get("resolution") == "100 m"):
-                raster_file = file_item
-                break
-
-        if not raster_file:
-            raise RuntimeError("No raster 100m GeoTIFF file found for CLC2018")
-
-        filename = f"{raster_file.get('file')}.zip"
-        file_size = raster_file.get("size", "unknown")
-        logger.info(f"[CLC2018] Selected file: {filename} ({file_size})")
-
-        # Step 3: Get download URLs using @get-download-file-urls
-        # For pre-packaged files, we use dataset_download_information IDs
-        logger.info("[CLC2018] Step 3/4: Getting download URLs for pre-packaged file...")
-
-        # Get dataset_download_information from details (not downloadable_files)
-        download_info = dataset_details.get("dataset_download_information")
-        if not download_info:
-            raise RuntimeError("No dataset_download_information available")
-
-        download_items = download_info.get("items", [])
-        if not download_items:
-            raise RuntimeError("No download information items available")
-
-        # Find RASTER 100m option in dataset_download_information
-        raster_download_info = None
-        for item in download_items:
-            if item.get("name") == "RASTER" and item.get("collection") == "100 m":
-                raster_download_info = item
-                break
-
-        if not raster_download_info:
-            raise RuntimeError("No RASTER 100m option in dataset_download_information")
-
-        download_info_id = raster_download_info.get("@id")
-        logger.info(f"[CLC2018] Using download_information_id: {download_info_id}")
-
-        # For CLC2018, we need to provide temporal extent (2017-2018)
-        # Call @get-download-file-urls with dataset_uid and download_information_id
-        try:
-            urls = self.get_download_urls(
-                dataset_uid=dataset_uid,
-                download_information_id=download_info_id,
-                date_from="2017-01-01",  # CLC2018 temporal extent
-                date_to="2018-12-31"
-            )
-
-            if not urls:
-                raise RuntimeError("No download URLs returned from API")
-
-            logger.info(f"[CLC2018] Retrieved {len(urls)} download URLs")
-
-            # Step 4: Download files
-            logger.info("[CLC2018] Step 4/4: Downloading files...")
-            downloaded_files = []
-
-            for i, url in enumerate(urls, 1):
-                # Extract filename from URL
-                url_filename = url.split("/")[-1].split("?")[0] or f"clc2018_part{i}.tif"
-                output_path = output_dir / url_filename
-
-                logger.info(f"[CLC2018] Downloading file {i}/{len(urls)}: {url_filename}")
-
-                try:
-                    downloaded_path = self.download_file(url, output_path)
-                    downloaded_files.append(downloaded_path)
-                    logger.info(f"[CLC2018] Downloaded: {downloaded_path}")
-                except Exception as e:
-                    logger.error(f"[CLC2018] Failed to download {url_filename}: {e}")
-                    # Continue with other files
-
-            if not downloaded_files:
-                raise RuntimeError("All downloads failed")
-
-            logger.info(f"[CLC2018] Successfully downloaded {len(downloaded_files)} files")
-            return downloaded_files
-
-        except Exception as e:
-            logger.error(f"[CLC2018] Download workflow failed: {e}")
-            raise RuntimeError(f"Failed to download CLC2018: {e}")
+        raise NotImplementedError(
+            "Programmatic CLMS download for CLC2018 is currently not supported.\n\n"
+            "The CLMS @get-download-file-urls API endpoint for pre-packaged files "
+            "requires temporal date parameters that are not applicable to static datasets like CLC2018.\n\n"
+            "MANUAL DOWNLOAD REQUIRED:\n"
+            "1. Visit: https://land.copernicus.eu/en/products/corine-land-cover/clc2018\n"
+            "2. Download: u2018_clc2018_v2020_20u1_raster100m.zip (~125 MB)\n"
+            "3. Place in: data/raw/clc/\n"
+            "4. The ETL pipeline will automatically use the local file.\n\n"
+            "For dynamic datasets with temporal coverage, use:\n"
+            "  - search_datasets() to find the dataset\n"
+            "  - get_dataset_details() to get full metadata\n"
+            "  - get_downloadable_files() to list available files\n"
+            "  - get_download_file_urls() with appropriate date_from/date_to parameters"
+        )

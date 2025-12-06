@@ -1,13 +1,14 @@
 # Copernicus Engine
 
-Automated data acquisition from **Copernicus Data Space** for GeoLens Europa. This service provides programmatic access to DEM (Digital Elevation Model) and Land Cover datasets, eliminating the need for manual downloads.
+Automated data acquisition from **Copernicus Data Space** and **Copernicus Land Monitoring Service (CLMS)** for GeoLens Europa. This service provides programmatic access to DEM (Digital Elevation Model) and Land Cover datasets.
 
 ## Overview
 
 **Copernicus Engine** is a Python-based ETL service that:
-- Fetches DEM and Land Cover data from Copernicus Data Space API
-- Supports both static token and OAuth2 authentication
-- Provides a command-line interface for easy dataset downloads
+- Fetches DEM data from Copernicus Data Space API (STAC/OData)
+- Interfaces with CLMS Download API for Land Cover datasets
+- Supports OAuth2 JWT authentication for CLMS
+- Provides a command-line interface for dataset downloads
 - Is designed to integrate with GeoLens Europa's existing geospatial pipeline
 
 ## Architecture
@@ -15,12 +16,14 @@ Automated data acquisition from **Copernicus Data Space** for GeoLens Europa. Th
 ```
 copernicus-engine/
 ├── src/
-│   ├── copernicus_client.py    # Generic Copernicus API client (STAC/OData)
-│   ├── copernicus_etl.py       # High-level ETL functions (DEM, Land Cover)
-│   └── fetch_basemaps.py       # CLI script for dataset downloads
-├── requirements.txt            # Python dependencies
-├── .env.example               # Environment variables template
-└── README.md                  # This file
+│   ├── copernicus_client.py       # Copernicus Data Space client (STAC/OData)
+│   ├── land_copernicus_client.py  # CLMS Download API client (JWT)
+│   ├── copernicus_etl.py          # High-level ETL functions
+│   ├── download_clc2018.py        # CLC2018 download script
+│   └── fetch_basemaps.py          # CLI script for dataset downloads
+├── requirements.txt               # Python dependencies
+├── .env.example                  # Environment variables template
+└── README.md                     # This file
 ```
 
 ## Prerequisites
@@ -69,6 +72,25 @@ COPERNICUS_DEM_COLLECTION_ID=COP-DEM-GLO-30
 COPERNICUS_LC_COLLECTION_ID=CORINE
 ```
 
+### CLMS Download API Configuration
+
+For Copernicus Land Monitoring Service (CLMS) datasets like CORINE Land Cover:
+
+```bash
+# CLMS API Authentication (JWT Bearer)
+COPERNICUS_CLIENT_ID=your_client_id_from_service_key
+COPERNICUS_USER_ID=your_user_id_from_service_key
+COPERNICUS_TOKEN_URI=https://land.copernicus.eu/@@oauth2-token
+COPERNICUS_PRIVATE_KEY_FILE=.copernicus_key.pem
+```
+
+**How to obtain CLMS credentials:**
+1. Visit: https://land.copernicus.eu/en/how-to-guides/how-to-download-spatial-data/how-to-create-api-tokens
+2. Create a service key (OAuth2 JWT)
+3. Download the JSON file containing `client_id`, `user_id`, and RSA private key
+4. Save the private key to `.copernicus_key.pem` in the `copernicus-engine` directory
+5. Add `client_id` and `user_id` to `.env`
+
 ### Finding Collection IDs
 
 Collection IDs vary by API provider. To find the correct IDs:
@@ -82,6 +104,117 @@ Collection IDs vary by API provider. To find the correct IDs:
 2. **CREODIAS Alternative**:
    - Base URL: `https://datahub.creodias.eu`
    - Browse collections: [https://datahub.creodias.eu/odata/v1/Collections](https://datahub.creodias.eu/odata/v1/Collections)
+
+## CLMS Download API
+
+The Copernicus Land Monitoring Service provides a REST API for programmatic data access. The `land_copernicus_client.py` module implements this API.
+
+### How It Works
+
+The CLMS Download API follows this workflow:
+
+1. **Search Dataset**: Find datasets using `/api/@search` with filters
+2. **Get Dataset Details**: Retrieve full metadata including available files
+3. **Get Downloadable Files**: Extract file information from `dataset_download_information`
+4. **Fetch URLs** (when supported): Use `/api/@get-download-file-urls` for dynamic datasets
+
+### Usage Example
+
+```python
+from src.land_copernicus_client import CLMSClient, CLMSConfig
+
+# Initialize client with credentials from .env
+config = CLMSConfig.from_env()
+client = CLMSClient(config)
+
+# Step 1: Search for datasets
+results = client.search_datasets(query="CLC2018")
+print(f"Found {len(results)} datasets")
+
+# Step 2: Get full dataset details
+dataset_url = results[0]["url"]
+details = client.get_dataset_details(dataset_url)
+
+# Step 3: List downloadable files
+files = client.get_downloadable_files(details)
+for file_info in files:
+    print(f"{file_info['name']}: {file_info['format']}, {file_info['collection']}")
+
+# Step 4: Get download URLs (for dynamic/temporal datasets)
+# Note: This may not work for all pre-packaged datasets
+try:
+    urls = client.get_download_file_urls(
+        dataset_uid=details["UID"],
+        download_information_id=files[0]["download_information_id"],
+        date_from="2018-01-01",
+        date_to="2018-12-31"
+    )
+    print(f"Download URLs: {urls}")
+except ValueError as e:
+    print(f"Cannot get URLs programmatically: {e}")
+```
+
+### CLC2018 (CORINE Land Cover, 100m) – Manual Download (Temporary)
+
+**Programmatic download of CLC2018 is currently NOT supported** via the CLMS Download API. The `/api/@get-download-file-urls` endpoint requires temporal parameters that are not applicable to static pre-packaged datasets like CLC2018.
+
+**Manual Download + Extraction Workflow:**
+
+1. **Download the pre-packaged ZIP file:**
+   - Visit: https://land.copernicus.eu/en/products/corine-land-cover/clc2018
+   - Find the product **CORINE Land Cover 2018 (vector/raster 100 m)**
+   - Download: `u2018_clc2018_v2020_20u1_raster100m.zip` (~125 MB)
+   - Save to: `copernicus-engine/data/raw/clc/`
+
+2. **Extract the GeoTIFF:**
+   ```bash
+   cd copernicus-engine
+   python -m src.download_clc2018
+   ```
+
+   This will:
+   - Verify the ZIP file exists
+   - Extract the GeoTIFF from the ZIP
+   - Rename it to `CLC2018_100m.tif` for consistency
+   - Place it in `data/raw/clc/`
+
+**Expected Output:**
+```
+======================================================================
+CORINE Land Cover 2018 Extraction
+Copernicus Land Monitoring Service
+======================================================================
+ZIP file: ../data/raw/clc/u2018_clc2018_v2020_20u1_raster100m.zip
+Output directory: ../data/raw/clc
+======================================================================
+
+[1/2] Extracting CLC2018 GeoTIFF from ZIP...
+
+======================================================================
+[SUCCESS] Extraction Complete!
+======================================================================
+GeoTIFF extracted to: ../data/raw/clc/CLC2018_100m.tif
+File size: 125.0 MB
+======================================================================
+```
+
+**Custom Paths:**
+```bash
+# Custom ZIP location
+python -m src.download_clc2018 --zip /path/to/clc2018.zip
+
+# Custom output directory
+python -m src.download_clc2018 --outdir /custom/output/dir
+
+# Verbose logging
+python -m src.download_clc2018 -v
+```
+
+### CLMS API Documentation
+
+- Official API Docs: https://eea.github.io/clms-api-docs/download.html
+- How-to Guide: https://land.copernicus.eu/en/how-to-guides/how-to-download-spatial-data/how-to-download-data-using-clms-api
+- Token Creation: https://land.copernicus.eu/en/how-to-guides/how-to-download-spatial-data/how-to-create-api-tokens
 
 ## Usage
 
