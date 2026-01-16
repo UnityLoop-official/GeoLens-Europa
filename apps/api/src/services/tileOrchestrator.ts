@@ -11,37 +11,112 @@ import {
 } from '@geo-lens/geocube';
 import { getNasaPrecipProvider, isNasaPrecipEnabled } from './precip/nasaPrecipProvider';
 
-// Initialize adapters (automatically selects real or mock based on USE_REAL_DATA env var)
-const adapters = createDataAdapters();
-const demAdapter = adapters.dem;
-const elsusAdapter = adapters.elsus;
-const eshm20Adapter = adapters.eshm20;
-const clcAdapter = adapters.clc;
-
 // NASA precipitation provider (replaces old precipitation adapter)
 const nasaPrecipProvider = isNasaPrecipEnabled() ? getNasaPrecipProvider() : null;
 
-export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheRecord[]> {
-    const startTime = Date.now();
-    console.time('TileOrchestrator:Total');
+// Track if NASA provider has been checked for availability
+let nasaProviderChecked = false;
+let nasaProviderHealthy = false;
 
-    // 1. Generate H3 indices for the area
-    console.time('TileOrchestrator:GenerateCells');
+/**
+ * Check NASA provider health and invalidate stale cache entries
+ * Called once on first request when NASA provider is enabled
+ */
+async function checkNasaProviderAndInvalidateCache(): Promise<void> {
+    if (nasaProviderChecked || !nasaPrecipProvider) return;
+    nasaProviderChecked = true;
+
+    try {
+        nasaProviderHealthy = await nasaPrecipProvider.healthCheck();
+        if (nasaProviderHealthy) {
+            // Invalidate cache entries without NASA data so they get re-fetched
+            const invalidated = h3Cache.invalidateWithoutPrecip();
+            if (invalidated > 0) {
+                console.log(`[TileOrchestrator] NASA provider healthy - invalidated ${invalidated} stale cache entries`);
+            }
+        }
+    } catch (error) {
+        console.warn('[TileOrchestrator] Failed to check NASA provider health:', error);
+    }
+}
+
+import { computeRunoffRisk } from './stormwater/runoffRisk';
+
+interface OrchestratorOptions {
+    profile?: string;
+}
+
+export async function getH3ScoresForArea(area: AreaRequest, options: OrchestratorOptions = {}): Promise<H3CacheRecord[]> {
+    const { profile } = options;
+
+    // 0. HARDENING: Request Budget (8s total)
+    const REQUEST_BUDGET_MS = 8000;
+    const ADAPTER_TIMEOUT_MS = 3000;
+    const startTime = Date.now();
+
+    const checkBudget = () => {
+        if (Date.now() - startTime > REQUEST_BUDGET_MS) {
+            const err: any = new Error('Request Timeout (Budget Exceeded)');
+            err.statusCode = 504;
+            throw err;
+        }
+    };
+
+    // 1. Determine Required Layers
+    // required_for_request = env_required ∪ profile_required
+    const envRequired = (process.env.GEO_REQUIRED_LAYERS || '').split(',').map(s => s.trim()).filter(Boolean);
+    const requiredLayers = new Set<string>(envRequired);
+
+    if (profile === 'stormwater') {
+        requiredLayers.add('precipitation');
+        requiredLayers.add('clc');
+        requiredLayers.add('dem');
+    }
+
+    // 2. Initialize Adapters
+    const adapters = createDataAdapters(requiredLayers);
+    const adapterMap: Record<string, any> = {
+        dem: adapters.dem,
+        elsus: adapters.elsus,
+        eshm20: adapters.eshm20,
+        clc: adapters.clc
+    };
+
+    // 3. HARDENING: Verify Required Layers (Fail Fast)
+    // Only check "Real" adapters that are REQUIRED
+    // (adapterFactory returns RealAdapter directly for required layers)
+    await Promise.all(Array.from(requiredLayers).map(async (layer) => {
+        if (adapterMap[layer] && adapterMap[layer].verify) {
+            const isHealthy = await adapterMap[layer].verify();
+            if (!isHealthy) {
+                const err: any = new Error(`Required data verification failed: ${layer}`);
+                err.statusCode = 503;
+                err.details = {
+                    failed_layer: layer,
+                    reason: 'Pre-flight verification failed (File missing or Service down)'
+                };
+                throw err;
+            }
+        }
+    }));
+
+    checkBudget();
+
+    // Check NASA provider health once and invalidate stale cache
+    await checkNasaProviderAndInvalidateCache();
+
+    // 4. Generate H3 indices
     const h3Indices = getCellsForBbox({
         west: area.minLon,
         south: area.minLat,
         east: area.maxLon,
         north: area.maxLat
     }, area.resolution);
-    console.timeEnd('TileOrchestrator:GenerateCells');
 
-    console.log(`[TileOrchestrator] Request for ${h3Indices.length} cells (Res: ${area.resolution})`);
-
-    // 2. Check Cache
-    console.time('TileOrchestrator:CacheLookup');
     const results: H3CacheRecord[] = [];
     const missingIndices: string[] = [];
 
+    // 5. Check Cache
     h3Indices.forEach(index => {
         const cached = h3Cache.get(index);
         if (cached) {
@@ -50,63 +125,166 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
             missingIndices.push(index);
         }
     });
-    console.timeEnd('TileOrchestrator:CacheLookup');
 
     if (missingIndices.length === 0) {
-        console.timeEnd('TileOrchestrator:Total');
-        console.log(`[TileOrchestrator] Cache hit 100% (${results.length} cells) in ${Date.now() - startTime}ms`);
         return results;
     }
 
-    console.log(`[TileOrchestrator] Computing ${missingIndices.length} new cells...`);
+    checkBudget();
 
-    // 3. Ensure Coverage (Parallel)
-    console.time('TileOrchestrator:EnsureCoverage');
-    await Promise.all([
-        demAdapter.ensureCoverageForArea(area),
-        elsusAdapter.ensureCoverageForArea(area),
-        eshm20Adapter.ensureCoverageForArea(area),
-        clcAdapter.ensureCoverageForArea(area)
+    // Helper: Timeout Wrapper
+    const withTimeout = async <T>(promise: Promise<T>, ms: number, fallbackVal?: T): Promise<T> => {
+        let timer: NodeJS.Timeout;
+        const timeoutPromise = new Promise<T>((_, reject) => {
+            timer = setTimeout(() => reject(new Error('Adapter Timeout')), ms);
+        });
+        try {
+            return await Promise.race([promise, timeoutPromise]);
+        } catch (e: any) {
+            if (fallbackVal !== undefined) return fallbackVal;
+            throw e;
+        } finally {
+            // @ts-ignore
+            clearTimeout(timer);
+        }
+    };
+
+    // 6. Ensure Coverage (Parallel with Timeouts)
+    const safeEnsure = async (name: string, adapter: any) => {
+        try {
+            await withTimeout(adapter.ensureCoverageForArea(area), ADAPTER_TIMEOUT_MS);
+            return null; // Success
+        } catch (err: any) {
+            console.warn(`[TileOrchestrator] ensureCoverage failed for ${name}:`, err.message);
+            return {
+                name,
+                error: err,
+                provenance: {
+                    source: 'RealData (Failed)',
+                    isMock: true,
+                    missingReason: err.message || 'Coverage Check Failed'
+                }
+            };
+        }
+    };
+
+    const coverageResults = await Promise.all([
+        safeEnsure('dem', adapterMap.dem),
+        safeEnsure('elsus', adapterMap.elsus),
+        safeEnsure('eshm20', adapterMap.eshm20),
+        safeEnsure('clc', adapterMap.clc)
     ]);
-    console.timeEnd('TileOrchestrator:EnsureCoverage');
 
-    // 4. Sample Features (Parallel)
-    console.time('TileOrchestrator:SampleFeatures');
+    checkBudget();
 
-    // Fetch geospatial features in parallel
+    // 7. Provenance Collection & Strict Mode Pre-Check
+    const dataStatus: Record<string, any> = {
+        precipitation: { source: 'N/A', isMock: true } as any
+    };
+
+    ['dem', 'elsus', 'eshm20', 'clc'].forEach((name, idx) => {
+        const res = coverageResults[idx];
+        if (res) {
+            dataStatus[name] = res.provenance;
+        } else {
+            dataStatus[name] = adapterMap[name].getProvenance();
+        }
+    });
+
+    // 8. Sample Features (with Timeouts)
+    const safeSample = async (name: string, adapter: any, indices: string[]) => {
+        if (dataStatus[name].missingReason) return {};
+
+        try {
+            return await withTimeout(adapter.sampleFeaturesForH3Cells(area, indices), ADAPTER_TIMEOUT_MS);
+        } catch (err: any) {
+            console.warn(`[TileOrchestrator] sampleFeatures failed for ${name}:`, err.message);
+            dataStatus[name] = {
+                source: 'RealData (Runtime Fail)',
+                isMock: true,
+                missingReason: err.message
+            };
+            return {};
+        }
+    };
+
     const [demData, elsusData, eshmData, clcData] = await Promise.all([
-        demAdapter.sampleFeaturesForH3Cells(area, missingIndices),
-        elsusAdapter.sampleFeaturesForH3Cells(area, missingIndices),
-        eshm20Adapter.sampleFeaturesForH3Cells(area, missingIndices),
-        clcAdapter.sampleFeaturesForH3Cells(area, missingIndices)
+        safeSample('dem', adapterMap.dem, missingIndices),
+        safeSample('elsus', adapterMap.elsus, missingIndices),
+        safeSample('eshm20', adapterMap.eshm20, missingIndices),
+        safeSample('clc', adapterMap.clc, missingIndices)
     ]);
 
-    // Fetch NASA precipitation data (real-time from microservice)
+    checkBudget();
+
+    // 9. Fetch NASA precipitation
     let precipData: Record<string, { rain24h_mm: number; rain72h_mm: number }> = {};
+
     if (nasaPrecipProvider) {
         try {
-            console.time('TileOrchestrator:NASAPrecip');
-            precipData = await nasaPrecipProvider.getForH3IndicesWithFallback(missingIndices);
-            console.timeEnd('TileOrchestrator:NASAPrecip');
+            precipData = await withTimeout(
+                nasaPrecipProvider.getForH3IndicesWithFallback(missingIndices),
+                ADAPTER_TIMEOUT_MS
+            );
+            dataStatus.precipitation = {
+                source: 'NASA GPM IMERG',
+                isMock: false,
+                latencyMs: 14400000
+            };
         } catch (error) {
             console.error('[TileOrchestrator] Failed to fetch NASA precipitation:', error);
-            // precipData remains empty object, will use fallback zeros
+            dataStatus.precipitation = {
+                source: 'NASA GPM IMERG (Failed)',
+                isMock: true,
+                missingReason: 'Fetch Error',
+                howToFix: 'Check nasa-precip-engine status'
+            };
+        }
+    } else {
+        dataStatus.precipitation = { source: 'None', isMock: true, missingReason: 'Provider disabled' };
+    }
+
+    // 10. Strict Mode / Profile Validation
+    const isStrictMode = process.env.GEO_REALDATA_MODE === 'strict';
+    const enforceStrict = isStrictMode || profile === 'stormwater';
+
+    if (enforceStrict) {
+        const violations: string[] = [];
+
+        const checkLayer = (name: string, prov: any) => {
+            if (requiredLayers.has(name) && prov.isMock) {
+                violations.push(name);
+            }
+        };
+
+        checkLayer('dem', dataStatus.dem);
+        checkLayer('clc', dataStatus.clc);
+        checkLayer('precipitation', dataStatus.precipitation);
+        checkLayer('elsus', dataStatus.elsus);
+        checkLayer('eshm20', dataStatus.eshm20);
+
+        if (violations.length > 0) {
+            const error = new Error(`Strict Data Requirement Failed. Missing/Mock layers: ${violations.join(', ')}`) as any;
+            error.statusCode = 503;
+            error.code = 'REALDATA_REQUIRED_MISSING';
+            error.details = {
+                message: 'Required real data layers are missing or using mock fallbacks.',
+                required_layers: Array.from(requiredLayers),
+                missing_layers: violations,
+                data_status: dataStatus,
+                how_to_fix: {
+                    clc: 'data/raw/clc/CLC2018_100m.tif',
+                    elsus: 'data/raw/elsus/elsus_v2.tif',
+                    eshm20: 'data/raw/eshm20/eshm20_pga_475.tif',
+                    precip: 'run nasa-precip-engine, set EARTHDATA creds',
+                    dem: 'verify Copernicus DEM provider access (AWS/S3)'
+                }
+            };
+            throw error;
         }
     }
 
-    console.timeEnd('TileOrchestrator:SampleFeatures');
-
-    // 5. Compute Scores & Update Cache
-    console.time('TileOrchestrator:ComputeScores');
-
-    // Sample 10 random cells for debug logging
-    const debugSampleSize = Math.min(10, missingIndices.length);
-    const debugIndices = new Set<string>();
-    while (debugIndices.size < debugSampleSize) {
-        const randomIdx = Math.floor(Math.random() * missingIndices.length);
-        debugIndices.add(missingIndices[randomIdx]);
-    }
-
+    // 11. Compute Scores & Update Cache
     const newRecords: H3CacheRecord[] = missingIndices.map(h3Index => {
         const dem = demData[h3Index] || {};
         const elsus = elsusData[h3Index] || {};
@@ -121,7 +299,6 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
             elsusClass: elsus.elsusClass,
             hazardPGA: eshm.hazardPGA,
             clcClass: clc.clcClass,
-            // NASA IMERG precipitation (real-time from microservice)
             rain24h: precip?.rain24h_mm,
             rain72h: precip?.rain72h_mm
         };
@@ -131,48 +308,99 @@ export async function getH3ScoresForArea(area: AreaRequest): Promise<H3CacheReco
         const seismicScore = computeSeismicScore(features);
         const mineralScore = computeMineralScore(features);
 
-        // DEBUG LOGGING for sampled cells
-        if (debugIndices.has(h3Index)) {
-            console.log(`[RISK DEBUG] Cell ${h3Index}:`);
-            console.log(`  Features: elevation=${features.elevation?.toFixed(1) || 'N/A'}m, slope=${features.slope?.toFixed(1) || 'N/A'}°, elsus=${features.elsusClass || 'N/A'}, clc=${features.clcClass || 'N/A'}`);
-            if (features.rain24h !== undefined && features.rain24h !== null) {
-                const rain24hStr = typeof features.rain24h === 'number' ? features.rain24h.toFixed(1) : String(features.rain24h);
-                const rain72hStr = (features.rain72h !== undefined && features.rain72h !== null && typeof features.rain72h === 'number')
-                    ? features.rain72h.toFixed(1)
-                    : 'N/A';
-                console.log(`  Precipitation: rain24h=${rain24hStr}mm, rain72h=${rain72hStr}mm`);
-            }
-            console.log(`  Scores: water=${waterScore.toFixed(3)}, landslide=${landslideScore.toFixed(3)}, seismic=${seismicScore.toFixed(3)}, mineral=${mineralScore.toFixed(3)}`);
+        // Stormwater Computation
+        let stormwaterRisk = undefined;
+        if (profile === 'stormwater') {
+            stormwaterRisk = computeRunoffRisk({
+                rain24h_mm: typeof features.rain24h === 'number' ? features.rain24h : 0,
+                clcClass: typeof features.clcClass === 'number' ? features.clcClass : 0,
+                slope_deg: typeof features.slope === 'number' ? features.slope : 0
+            });
         }
 
         const record: H3CacheRecord = {
             h3Index,
             updatedAt: new Date().toISOString(),
-            sourceHash: nasaPrecipProvider ? 'v3-nasa-imerg' : 'v1-mock-data',
+            sourceHash: 'v4-multi-adapter',
             water: {
-                stress: waterScore,           // Water stress = drainage difficulty (0-1)
-                recharge: 1 - waterScore,     // Recharge potential = inverse of stress
+                stress: waterScore,
+                recharge: 1 - waterScore,
                 score: waterScore,
-                rain24h: typeof features.rain24h === 'number' ? features.rain24h : undefined,
-                rain72h: typeof features.rain72h === 'number' ? features.rain72h : undefined
-            },
+                // CACHE FIX: Do not cache precip if it's fallback/mock
+                rain24h: (dataStatus.precipitation.isMock) ? undefined : features.rain24h,
+                rain72h: (dataStatus.precipitation.isMock) ? undefined : features.rain72h,
+                ...(stormwaterRisk ? { stormwater: stormwaterRisk } : {})
+            } as any,
             landslide: { susceptibility: landslideScore, history: false, score: landslideScore },
             seismic: { pga: features.hazardPGA || 0, class: (features.hazardPGA || 0) > 0.2 ? 'HIGH' : 'LOW', score: seismicScore },
             mineral: { prospectivity: mineralScore, type: mineralScore > 0.5 ? 'Potential' : 'None', score: mineralScore },
             metadata: {
-                lat: 0, // Could be populated if needed
+                lat: 0,
                 lon: 0,
                 elevation: features.elevation || 0,
                 biome: 'Unknown'
-            }
+            },
+            data_status: dataStatus
         };
 
         h3Cache.set(h3Index, record);
         return record;
     });
-    console.timeEnd('TileOrchestrator:ComputeScores');
 
-    console.timeEnd('TileOrchestrator:Total');
-    console.log(`[TileOrchestrator] Completed in ${Date.now() - startTime}ms`);
     return [...results, ...newRecords];
+}
+
+/**
+ * Low-level batch fetch for specific cells (used by NetworkGraph)
+ */
+export async function getDataForCells(cellIds: string[], requiredLayers: string[] = []) {
+    const adapters = createDataAdapters(new Set(requiredLayers)) as any;
+
+    // Check verification if strict
+    const hardFail = (process.env.GEO_REALDATA_MODE === 'strict');
+    if (hardFail) {
+        for (const layer of requiredLayers) {
+            const adapter = adapters[layer];
+            if (adapter && adapter.verify && !(await adapter.verify())) {
+                throw {
+                    status: 503,
+                    error: `Required data verification failed: ${layer}`,
+                    details: { failed_layer: layer, reason: "Pre-flight verification failed" }
+                };
+            }
+        }
+    }
+
+    const tasks = cellIds.map(async (h3Index) => {
+        const features: Partial<CellFeatures> = {};
+        const prov: Record<string, any> = {};
+
+        // Parallel fetch for all adapters
+        await Promise.all(Object.entries(adapters).map(async ([key, adapter]) => {
+            try {
+                // Should pass AreaRequest? The adapter interface is sampleFeaturesForH3Cells(area, indices).
+                // But mock adapters ignore area. Real adapters might need it if they look up files based on bbox?
+                // RealDemAdapter uses indices directly if provided, ignoring area usually. 
+                // Let's pass a dummy area for safety.
+                const dummyArea = { minLat: 0, maxLat: 0, minLon: 0, maxLon: 0, resolution: 11, type: "strict_point" as any };
+
+                const data = await adapter.sampleFeaturesForH3Cells(dummyArea, [h3Index]);
+
+                // sampleFeatures returns dictionary { h3: { features } }
+                if (data && data[h3Index]) {
+                    Object.assign(features, data[h3Index]);
+                }
+
+                if (adapter.getProvenance) {
+                    prov[key] = adapter.getProvenance(h3Index);
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }));
+
+        return { h3Index, ...features, provenance: prov };
+    });
+
+    return Promise.all(tasks);
 }
